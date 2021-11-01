@@ -1,6 +1,6 @@
 using System;
 
-namespace YotorAspNetCoreApi
+namespace YotorAspNetCoreApiResources
 {
     public class WeatherForecast
     {
