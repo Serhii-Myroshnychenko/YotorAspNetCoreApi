@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace YotorAspNetCoreApiResources.Contracts
 {
-    interface IFeedbackRepository
+    public interface IFeedbackRepository
     {
     }
 }
