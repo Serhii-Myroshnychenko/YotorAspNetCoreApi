@@ -11,6 +11,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using YotorAspNetCoreApi.Context;
+using YotorAspNetCoreApi.Contracts;
+using YotorAspNetCoreApi.Helpers;
+using YotorAspNetCoreApi.Repositories;
 
 namespace YotorAspNetCoreApi
 {
@@ -28,6 +32,26 @@ namespace YotorAspNetCoreApi
         {
 
             services.AddControllers();
+
+            var authOptionsConfiguration = Configuration.GetSection("Auth");
+            services.Configure<AuthOptions>(authOptionsConfiguration);
+
+
+            services.AddSingleton<DapperContext>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
+
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                    });
+
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "YotorAspNetCoreApi", Version = "v1" });
@@ -47,7 +71,8 @@ namespace YotorAspNetCoreApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseCors();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
