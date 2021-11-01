@@ -70,7 +70,7 @@ namespace YotorAspNetCoreApi.Controllers
 
 
             }
-            return Unauthorized();
+            return NotFound("Неверный логин или пароль");
 
         }
         private string GenerateJWT(Customer customer)
