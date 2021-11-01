@@ -10,6 +10,6 @@ namespace YotorAspNetCoreApi.Contracts
     {
         public Task<IEnumerable<Customer>> GetCustomers();
         public Customer GetCustomer(string email, string password);
-        public Task Registration(string full_name, string email, string phone, string password, bool isAdmin);
+        public Task Registration(string full_name, string email, string phone, string password, bool is_admin);
     }
 }

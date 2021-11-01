@@ -44,16 +44,16 @@ namespace YotorAspNetCoreApi.Repositories
             }
         }
 
-        public async Task Registration(string full_name, string email, string phone, string password, bool isAdmin)
+        public async Task Registration(string full_name, string email, string phone, string password, bool is_admin)
         {
-            var query = "Insert into Customer (full_name,email,phone,password,is_admin) VALUES (@full_name,@email,@phone,@password,@isAdmin)";
+            var query = "Insert into Customer (full_name,email,phone,password,is_admin) VALUES (@full_name,@email,@phone,@password,@is_admin)";
 
             var parameters = new DynamicParameters();
             parameters.Add("full_name", full_name, DbType.String);
             parameters.Add("email", email, DbType.String);
             parameters.Add("phone", phone, DbType.String);
             parameters.Add("password", BCrypt.Net.BCrypt.HashPassword(password), DbType.String);
-            parameters.Add("is_admin", isAdmin, DbType.Boolean);
+            parameters.Add("is_admin", is_admin, DbType.Boolean);
 
             using (var connection = _dapperContext.CreateConnection())
             {
