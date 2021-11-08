@@ -16,11 +16,14 @@ namespace YotorAspNetCoreApiResources.Controllers
     public class CarController : ControllerBase
     {
         private readonly ICarRepository _carRepository;
+        private readonly IHelpRepository _helpRepository;
+
 
         private int UserId => int.Parse(User.Claims.Single(c => c.Type == "user_id").Value);
-        public CarController(ICarRepository carRepository)
+        public CarController(ICarRepository carRepository, IHelpRepository helpRepository)
         {
             _carRepository = carRepository;
+            _helpRepository = helpRepository;
         }
         
         [HttpGet]
@@ -29,7 +32,7 @@ namespace YotorAspNetCoreApiResources.Controllers
         {
             try
             {
-                bool isAdmin = await _carRepository.IsAdmin(UserId);
+                bool isAdmin = await _helpRepository.IsAdmin(UserId);
                 if(isAdmin == true)
                 {
                     var cars = await _carRepository.GetCars();
@@ -68,7 +71,7 @@ namespace YotorAspNetCoreApiResources.Controllers
         {
             try
             {
-                var isLandlord = await _carRepository.IsLandlord(UserId);
+                var isLandlord = await _helpRepository.IsLandlord(UserId);
                 if (isLandlord != null)
                 {
                     byte[] imageData = null;
@@ -98,7 +101,7 @@ namespace YotorAspNetCoreApiResources.Controllers
             try
             {
 
-                bool isAdmin = await _carRepository.IsAdmin(UserId);
+                bool isAdmin = await _helpRepository.IsAdmin(UserId);
                 if (isAdmin == true)
                 {
                     byte[] imageData = null;

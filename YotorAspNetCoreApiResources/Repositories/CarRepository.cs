@@ -61,29 +61,6 @@ namespace YotorAspNetCoreApiResources.Repositories
                 return cars.ToList();
             }
         }
-        public async Task<Landlord> IsLandlord(int id)
-        {
-            var query = "Select * from Landlord Where user_id = @id";
-            using(var connection = _dapperContext.CreateConnection())
-            {
-                var landlord = await connection.QuerySingleOrDefaultAsync<Landlord>(query, new { id});
-                return landlord;
-            }
-        }
-        public async Task<bool> IsAdmin(int id)
-        {
-            var query = "Select * from Customer Where user_id = @id and is_admin = 1";
-            using (var connection = _dapperContext.CreateConnection())
-            {
-                var user = await connection.QuerySingleOrDefaultAsync<Landlord>(query, new { id });
-                if (user != null)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         public async Task UpdateCar(int id, string model, string brand, string year, string transmission, string address, bool status, string type, int price, byte[] photo, string description, string number)
         {
             var query = "UPDATE Car SET model = @model, brand = @brand, year = @year, transmission = @transmission, address = @address,status = @status,type = @type,price = @price,photo = @photo,description = @description,number = @number WHERE car_id = @id";
