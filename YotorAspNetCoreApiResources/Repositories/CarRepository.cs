@@ -70,5 +70,40 @@ namespace YotorAspNetCoreApiResources.Repositories
                 return landlord;
             }
         }
+        public async Task<bool> IsAdmin(int id)
+        {
+            var query = "Select * from Customer Where user_id = @id and is_admin = 1";
+            using (var connection = _dapperContext.CreateConnection())
+            {
+                var user = await connection.QuerySingleOrDefaultAsync<Landlord>(query, new { id });
+                if (user != null)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public async Task UpdateCar(int id, string model, string brand, string year, string transmission, string address, bool status, string type, int price, byte[] photo, string description, string number)
+        {
+            var query = "UPDATE Car SET model = @model, brand = @brand, year = @year, transmission = @transmission, address = @address,status = @status,type = @type,price = @price,photo = @photo,description = @description,number = @number WHERE car_id = @id";
+            var parameters = new DynamicParameters();
+            parameters.Add("id", id, DbType.Int32);
+            parameters.Add("model", model, DbType.String);
+            parameters.Add("brand", brand, DbType.String);
+            parameters.Add("year", year, DbType.String);
+            parameters.Add("transmission", transmission, DbType.String);
+            parameters.Add("address", address, DbType.String);
+            parameters.Add("status", status, DbType.Boolean);
+            parameters.Add("type", type, DbType.String);
+            parameters.Add("price", price, DbType.Int64);
+            parameters.Add("photo", photo, DbType.Binary);
+            parameters.Add("description", description, DbType.String);
+            parameters.Add("number", number, DbType.String);
+            using (var connection = _dapperContext.CreateConnection())
+            {
+                await connection.ExecuteAsync(query, parameters);
+            }
+        }
     }
 }

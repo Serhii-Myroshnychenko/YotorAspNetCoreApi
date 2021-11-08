@@ -29,8 +29,13 @@ namespace YotorAspNetCoreApiResources.Controllers
         {
             try
             {
-                var cars = await _carRepository.GetCars();
-                return Ok(cars);
+                bool isAdmin = await _carRepository.IsAdmin(UserId);
+                if(isAdmin == true)
+                {
+                    var cars = await _carRepository.GetCars();
+                    return Ok(cars);
+                }
+                return NotFound("Недостаточно прав");
             }
             catch (Exception ex)
             {
@@ -85,6 +90,35 @@ namespace YotorAspNetCoreApiResources.Controllers
                 return StatusCode(500, ex.Message);
             }
             
+        }
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateCar(int id,[FromForm] CarConstructor carConstructor)
+        {
+            try
+            {
+
+                bool isAdmin = await _carRepository.IsAdmin(UserId);
+                if (isAdmin == true)
+                {
+                    byte[] imageData = null;
+                    if (carConstructor.Photo != null)
+                    {
+                        using (var binaryReader = new BinaryReader(carConstructor.Photo.OpenReadStream()))
+                        {
+                            imageData = binaryReader.ReadBytes((int)carConstructor.Photo.Length);
+                        }
+                    }
+                    await _carRepository.UpdateCar(id, carConstructor.Model, carConstructor.Brand, carConstructor.Year, carConstructor.Transmission, carConstructor.Address, carConstructor.Status, carConstructor.Type, carConstructor.Price, imageData, carConstructor.Description, carConstructor.Number);
+                    return Ok("Успешно");
+                }
+                return NotFound("Недостаточно прав");
+
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }
