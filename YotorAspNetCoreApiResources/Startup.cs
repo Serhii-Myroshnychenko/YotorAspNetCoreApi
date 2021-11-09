@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,12 +12,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using YotorAspNetCoreApi.Context;
-using YotorAspNetCoreApi.Contracts;
+using YotorAspNetCoreApiResources.Context;
 using YotorAspNetCoreApi.Helpers;
-using YotorAspNetCoreApi.Repositories;
+using YotorAspNetCoreApiResources.Contracts;
+using YotorAspNetCoreApiResources.Repositories;
 
-namespace YotorAspNetCoreApi
+namespace YotorAspNetCoreApiResources
 {
     public class Startup
     {
@@ -32,13 +33,25 @@ namespace YotorAspNetCoreApi
         {
 
             services.AddControllers();
+            var authOptions = Configuration.GetSection("Auth").Get<AuthOptions>();
 
-            var authOptionsConfiguration = Configuration.GetSection("Auth");
-            services.Configure<AuthOptions>(authOptionsConfiguration);
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = authOptions.Issuer,
+                        ValidateAudience = true,
+                        ValidAudience = authOptions.Audience,
+                        ValidateLifetime = true,
+                        IssuerSigningKey = authOptions.GetSymmetricSecurityKey(),
+                        ValidateIssuerSigningKey = true,
 
 
-            services.AddSingleton<DapperContext>();
-            services.AddScoped<ICustomerRepository, CustomerRepository>();
+                    };
+                });
 
             services.AddCors(options =>
             {
@@ -51,10 +64,18 @@ namespace YotorAspNetCoreApi
                     });
 
             });
+            services.AddSingleton<DapperContext>();
+            services.AddScoped<IBookingRepository, BookingRepository>();
+            services.AddScoped<ICarRepository, CarRepository>();
+            services.AddScoped<IFeedbackRepository, FeedbackRepository>();
+            services.AddScoped<ILandlordRepository, LandlordRepository>();
+            services.AddScoped<IOrganizationRepository, OrganizationRepository>();
+            services.AddScoped<IRestrictionRepository, RestrictionRepository>();
+            services.AddScoped<IHelpRepository, HelpRepository>();
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "YotorAspNetCoreApi", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "YotorAspNetCoreApiResources", Version = "v1" });
             });
         }
 
@@ -65,7 +86,7 @@ namespace YotorAspNetCoreApi
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "YotorAspNetCoreApi v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "YotorAspNetCoreApiResources v1"));
             }
 
             app.UseHttpsRedirection();
