@@ -73,10 +73,11 @@ namespace YotorAspNetCoreApiResources.Controllers
                 bool isAdmin = await _helpRepository.IsAdmin(UserId);
                 if (isAdmin == true)
                 {
+                    var isUserMemberOfTheOrganization = await _helpRepository.IsLandlord(landlord.user_id); 
                     bool isUser = await _helpRepository.IsUser(landlord.user_id);
                     bool isOrganization = await _helpRepository.IsOrganization(landlord.organization_id);
 
-                    if(isUser == true && isOrganization == true)
+                    if(isUser == true && isOrganization == true && isUserMemberOfTheOrganization == null)
                     {
                         await _landlordRepository.CreateLandlord(landlord);
                         return Ok("Ok");
