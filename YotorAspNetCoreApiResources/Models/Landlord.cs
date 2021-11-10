@@ -7,10 +7,10 @@ namespace YotorAspNetCoreApiResources.Models
 {
     public class Landlord
     {
-        public int landlord_id { get; set; }
-        public int user_id { get; set; }
-        public int organization_id { get; set; }
-        public string name { get; set; }
+        public int Landlord_id { get; set; }
+        public int User_id { get; set; }
+        public int Organization_id { get; set; }
+        public string Name { get; set; }
 
     }
 }

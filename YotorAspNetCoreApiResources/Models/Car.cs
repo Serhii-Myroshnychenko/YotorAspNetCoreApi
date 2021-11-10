@@ -7,19 +7,19 @@ namespace YotorAspNetCoreApiResources.Models
 {
     public class Car
     {
-        public int car_id { get; set; }
-        public int organization_id { get; set; }
-        public string model { get; set; }
-        public string brand { get; set; }
-        public string year { get; set; }
-        public string transmission { get; set; }
-        public string address { get; set; }
-        public bool status { get; set; }
-        public string type { get; set; }
-        public int price { get; set; }
-        public byte[]? photo { get; set; }
-        public string? description { get; set; }
-        public string number { get; set; }
+        public int Car_id { get; set; }
+        public int Organization_id { get; set; }
+        public string Model { get; set; }
+        public string Brand { get; set; }
+        public string Year { get; set; }
+        public string Transmission { get; set; }
+        public string Address { get; set; }
+        public bool Status { get; set; }
+        public string Type { get; set; }
+        public int Price { get; set; }
+        public byte[]? Photo { get; set; }
+        public string? Description { get; set; }
+        public string Number { get; set; }
 
     }
 }

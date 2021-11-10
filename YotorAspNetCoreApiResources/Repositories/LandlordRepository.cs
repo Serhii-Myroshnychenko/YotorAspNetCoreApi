@@ -22,9 +22,9 @@ namespace YotorAspNetCoreApiResources.Repositories
         {
             var query = "INSERT INTO Landlord (user_id, organization_id, name) values (@user_id, @organization_id, @name);";
             var parameters = new DynamicParameters();
-            parameters.Add("user_id", landlord.user_id, DbType.Int64);
-            parameters.Add("organization_id", landlord.organization_id, DbType.Int64);
-            parameters.Add("name", landlord.name, DbType.String);
+            parameters.Add("user_id", landlord.User_id, DbType.Int64);
+            parameters.Add("organization_id", landlord.Organization_id, DbType.Int64);
+            parameters.Add("name", landlord.Name, DbType.String);
 
 
 
@@ -59,9 +59,9 @@ namespace YotorAspNetCoreApiResources.Repositories
             var query = "UPDATE Landlord SET user_id = @user_id, organization_id = @organization_id, name = @name WHERE landlord_id = @id";
             var parameters = new DynamicParameters();
             parameters.Add("id", id, DbType.Int64);
-            parameters.Add("user_id", landlord.user_id, DbType.Int64);
-            parameters.Add("organization_id", landlord.organization_id, DbType.Int64);
-            parameters.Add("name", landlord.name, DbType.String);
+            parameters.Add("user_id", landlord.User_id, DbType.Int64);
+            parameters.Add("organization_id", landlord.Organization_id, DbType.Int64);
+            parameters.Add("name", landlord.Name, DbType.String);
 
             using (var connection = _dapperContext.CreateConnection())
             {

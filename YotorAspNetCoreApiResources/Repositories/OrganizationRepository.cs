@@ -21,14 +21,14 @@ namespace YotorAspNetCoreApiResources.Repositories
         {
             var query = "INSERT INTO Organization (name,email,phone,code,taxes,address,founder,account) values (@name,@email,@phone,@code,@taxes,@address,@founder,@account);";
             var parameters = new DynamicParameters();
-            parameters.Add("name", organization.name, DbType.String);
-            parameters.Add("email", organization.email, DbType.String);
-            parameters.Add("phone", organization.phone, DbType.String);
-            parameters.Add("code", organization.code, DbType.String);
-            parameters.Add("taxes", organization.taxes, DbType.String);
-            parameters.Add("address", organization.address, DbType.String);
-            parameters.Add("founder", organization.founder, DbType.String);
-            parameters.Add("account", organization.account, DbType.String);
+            parameters.Add("name", organization.Name, DbType.String);
+            parameters.Add("email", organization.Email, DbType.String);
+            parameters.Add("phone", organization.Phone, DbType.String);
+            parameters.Add("code", organization.Code, DbType.String);
+            parameters.Add("taxes", organization.Taxes, DbType.String);
+            parameters.Add("address", organization.Address, DbType.String);
+            parameters.Add("founder", organization.Founder, DbType.String);
+            parameters.Add("account", organization.Account, DbType.String);
 
 
             using (var connection = _dapperContext.CreateConnection())
@@ -42,14 +42,14 @@ namespace YotorAspNetCoreApiResources.Repositories
             var query = "UPDATE Organization SET name = @name, email = @email, phone = @phone, code = @code,taxes = @taxes,address = @address,founder = @founder,account = @account WHERE organization_id = @id";
             var parameters = new DynamicParameters();
             parameters.Add("id", id, DbType.Int64);
-            parameters.Add("name", organization.name, DbType.String);
-            parameters.Add("email", organization.email, DbType.String);
-            parameters.Add("phone", organization.phone, DbType.String);
-            parameters.Add("code", organization.code, DbType.String);
-            parameters.Add("taxes", organization.taxes, DbType.String);
-            parameters.Add("address", organization.address, DbType.String);
-            parameters.Add("founder", organization.founder, DbType.String);
-            parameters.Add("account", organization.account, DbType.String);
+            parameters.Add("name", organization.Name, DbType.String);
+            parameters.Add("email", organization.Email, DbType.String);
+            parameters.Add("phone", organization.Phone, DbType.String);
+            parameters.Add("code", organization.Code, DbType.String);
+            parameters.Add("taxes", organization.Taxes, DbType.String);
+            parameters.Add("address", organization.Address, DbType.String);
+            parameters.Add("founder", organization.Founder, DbType.String);
+            parameters.Add("account", organization.Account, DbType.String);
 
 
             using (var connection = _dapperContext.CreateConnection())

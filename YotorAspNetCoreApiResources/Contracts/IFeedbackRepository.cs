@@ -10,7 +10,7 @@ namespace YotorAspNetCoreApiResources.Contracts
     {
         public Task<IEnumerable<Feedback>> GetFeedbacks();
         public Task<Feedback> GetFeedback(int id);
-        public Task CreateFeedback(Feedback feedback);
+        public Task CreateFeedback(int user_id, string name, DateTime date, string text);
         public Task DeleteFeedback(int id);
     }
 }
