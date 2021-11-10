@@ -7,11 +7,11 @@ namespace YotorAspNetCoreApiResources.Models
 {
     public class Feedback
     {
-        public int feedback_id { get; set; }
-        public int user_id { get; set; }
-        public string name{ get;set;}
-        public DateTime? date { get; set; }
-        public string text { get; set; }
+        public int Feedback_id { get; set; }
+        public int User_id { get; set; }
+        public string Name{ get;set;}
+        public DateTime? Date { get; set; }
+        public string Text { get; set; }
 
 
     }

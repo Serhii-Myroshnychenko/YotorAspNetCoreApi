@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace YotorAspNetCoreApiResources.Models
 {
-    public class Landlord
+    public class FeedbackConstructor
     {
-        public int Landlord_id { get; set; }
-        public int User_id { get; set; }
-        public int Organization_id { get; set; }
+        [Required]
         public string Name { get; set; }
-
+        [Required]
+        public string Text { get; set; }
     }
 }

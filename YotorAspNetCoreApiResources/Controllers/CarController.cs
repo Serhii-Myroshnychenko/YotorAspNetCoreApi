@@ -79,7 +79,7 @@ namespace YotorAspNetCoreApiResources.Controllers
                     {
                         imageData = binaryReader.ReadBytes((int)carConstructor.Photo.Length);
                     }
-                    await _carRepository.CreateCar(isLandlord.organization_id, carConstructor.Model, carConstructor.Brand, carConstructor.Year, carConstructor.Transmission, carConstructor.Address, true, carConstructor.Type, carConstructor.Price, imageData, carConstructor.Description, carConstructor.Number);
+                    await _carRepository.CreateCar(isLandlord.Organization_id, carConstructor.Model, carConstructor.Brand, carConstructor.Year, carConstructor.Transmission, carConstructor.Address, true, carConstructor.Type, carConstructor.Price, imageData, carConstructor.Description, carConstructor.Number);
                     return Ok("Успешно");
 
                 }
