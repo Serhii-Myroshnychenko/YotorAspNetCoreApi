@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using YotorAspNetCoreApi.Models;
 using YotorAspNetCoreApiResources.Context;
 using YotorAspNetCoreApiResources.Contracts;
 using YotorAspNetCoreApiResources.Models;
@@ -32,6 +33,34 @@ namespace YotorAspNetCoreApiResources.Repositories
             {
                 var user = await connection.QuerySingleOrDefaultAsync<Landlord>(query, new { id });
                 if (user != null)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public async Task<bool> IsUser(int id)
+        {
+            var query = "Select * from Customer Where user_id = @id";
+            using(var connection = _dapperContext.CreateConnection())
+            {
+                var customer = await connection.QueryFirstOrDefaultAsync<Customer>(query, new { id });
+                if (customer != null)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public async Task<bool> IsOrganization(int id)
+        {
+            var query = "Select * from Organization Where organization_id = @id";
+            using (var connection = _dapperContext.CreateConnection())
+            {
+                var organization = await connection.QueryFirstOrDefaultAsync<Organization>(query, new { id });
+                if (organization != null)
                 {
                     return true;
                 }

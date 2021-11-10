@@ -73,8 +73,19 @@ namespace YotorAspNetCoreApiResources.Controllers
                 bool isAdmin = await _helpRepository.IsAdmin(UserId);
                 if (isAdmin == true)
                 {
-                    await _landlordRepository.CreateLandlord(landlord);
-                    return Ok("Ok");
+                    bool isUser = await _helpRepository.IsUser(landlord.user_id);
+                    bool isOrganization = await _helpRepository.IsOrganization(landlord.organization_id);
+
+                    if(isUser == true && isOrganization == true)
+                    {
+                        await _landlordRepository.CreateLandlord(landlord);
+                        return Ok("Ok");
+                    }
+                    else
+                    {
+                        return NotFound("Данные не являются корректными");
+                    }
+                    
                 }
                 else
                 {
@@ -87,11 +98,31 @@ namespace YotorAspNetCoreApiResources.Controllers
             }
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateLandlord()
+        public async Task<IActionResult> UpdateLandlord(int id, Landlord landlord)
         {
             try
             {
-                return Ok();
+                bool isAdmin = await _helpRepository.IsAdmin(UserId);
+                if (isAdmin == true)
+                {
+                    bool isUser = await _helpRepository.IsUser(landlord.user_id);
+                    bool isOrganization = await _helpRepository.IsOrganization(landlord.organization_id);
+
+                    if (isUser == true && isOrganization == true)
+                    {
+                        await _landlordRepository.UpdateLandlord(id,landlord);
+                        return Ok("Ok");
+                    }
+                    else
+                    {
+                        return NotFound("Данные не являются корректными");
+                    }
+
+                }
+                else
+                {
+                    return BadRequest("Вы не являетесь администратором");
+                }
 
             }
             catch(Exception ex)

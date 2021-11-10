@@ -39,7 +39,7 @@ namespace YotorAspNetCoreApiResources.Repositories
             var query = "Select * from Landlord where landlord_id = @id";
             using (var connection = _dapperContext.CreateConnection())
             {
-                var landlord = await connection.QuerySingleOrDefaultAsync<Landlord>(query);
+                var landlord = await connection.QuerySingleOrDefaultAsync<Landlord>(query, new { id});
                 return landlord;
             }
         }
