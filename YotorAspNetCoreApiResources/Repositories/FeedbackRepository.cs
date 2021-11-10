@@ -54,7 +54,7 @@ namespace YotorAspNetCoreApiResources.Repositories
 
         public async  Task<IEnumerable<Feedback>> GetFeedbacks()
         {
-            var query = "Select * from Feedback where feedback_id = @id";
+            var query = "Select * from Feedback";
             using (var connection = _dapperContext.CreateConnection())
             {
                 var feedbacks = await connection.QueryAsync<Feedback>(query);
