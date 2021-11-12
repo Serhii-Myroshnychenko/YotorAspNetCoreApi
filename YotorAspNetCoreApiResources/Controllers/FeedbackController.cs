@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,10 @@ namespace YotorAspNetCoreApiResources.Controllers
             _feedbackRepository = feedbackRepository;
             _helpRepository = helpRepository;
         }
+        
         [HttpGet]
+        [Authorize]
+
         public async Task<IActionResult> GetFeedbacks()
         {
             try
@@ -42,7 +46,9 @@ namespace YotorAspNetCoreApiResources.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+       
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetFeedback(int id)
         {
             try
@@ -63,12 +69,14 @@ namespace YotorAspNetCoreApiResources.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateFeedback([FromForm]FeedbackConstructor feedbackConstructor)
         {
             try
             {
-                DateTime time = DateTime.Now;
+                DateTime time = DateTime.Today;
                 await _feedbackRepository.CreateFeedback(UserId,feedbackConstructor.Name,time,feedbackConstructor.Text);
                 return Ok("OK");
             }
@@ -77,5 +85,27 @@ namespace YotorAspNetCoreApiResources.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteFeedback(int id)
+        {
+            try
+            {
+                bool isAdmin = await _helpRepository.IsAdmin(UserId);
+                if(isAdmin == true)
+                {
+                    await _feedbackRepository.DeleteFeedback(id);
+                    return Ok("Ok");
+                }
+                else
+                {
+                    return BadRequest("Вы не являетесь администратором");
+                }
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
     }
 }

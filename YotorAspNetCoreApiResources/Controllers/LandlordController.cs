@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,9 @@ namespace YotorAspNetCoreApiResources.Controllers
             _landlordRepository = landlordRepository;
             _helpRepository = helpRepository;
         }
+        
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetLandlords()
         {
             try
@@ -44,7 +47,9 @@ namespace YotorAspNetCoreApiResources.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetLandlord(int id)
         {
             try
@@ -65,7 +70,9 @@ namespace YotorAspNetCoreApiResources.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateLandlord(Landlord landlord)
         {
             try
@@ -98,7 +105,9 @@ namespace YotorAspNetCoreApiResources.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+       
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateLandlord(int id, Landlord landlord)
         {
             try

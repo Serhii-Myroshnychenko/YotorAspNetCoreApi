@@ -35,7 +35,7 @@ namespace YotorAspNetCoreApiResources.Repositories
 
         public async Task DeleteFeedback(int id)
         {
-            var query = "Delete * from Feedback where feedback_id = @id";
+            var query = "Delete from Feedback where feedback_id = @id";
             using (var connection = _dapperContext.CreateConnection())
             {
                 await connection.QuerySingleOrDefaultAsync<Feedback>(query, new { id });
