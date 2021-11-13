@@ -17,13 +17,13 @@ namespace YotorAspNetCoreApiResources.Repositories
         {
             _dapperContext = dapperContext;
         }
-        public async Task CreateRestriction(Restriction restriction)
+        public async Task CreateRestriction(int landlord_id, string car_name, string description)
         {
             var query = "INSERT INTO Restriction (landlord_id, car_name, description) values (@landlord_id, @car_name, @description);";
             var parameters = new DynamicParameters();
-            parameters.Add("landlord_id", restriction.Landlord_id, DbType.Int64);
-            parameters.Add("car_name", restriction.Car_name, DbType.String);
-            parameters.Add("descriptoin", restriction.Description, DbType.String);
+            parameters.Add("landlord_id", landlord_id, DbType.Int64);
+            parameters.Add("car_name", car_name, DbType.String);
+            parameters.Add("description", description, DbType.String);
 
             using (var connection = _dapperContext.CreateConnection())
             {
@@ -33,7 +33,7 @@ namespace YotorAspNetCoreApiResources.Repositories
 
         public async Task DeleteRestriction(int id)
         {
-            var query = "Delete * from Restriction where restriction_id = @id";
+            var query = "Delete from Restriction where restriction_id = @id";
             using (var connection = _dapperContext.CreateConnection())
             {
                 await connection.QuerySingleOrDefaultAsync<Restriction>(query, new { id });
@@ -62,7 +62,18 @@ namespace YotorAspNetCoreApiResources.Repositories
 
         public async Task UpdateRestriction(int id, Restriction restriction)
         {
-            throw new NotImplementedException();
+            var query = "UPDATE Restriction SET landlord_id = @landlord_id, car_name = @car_name, description = @description WHERE restriction_id = @id";
+            var parameters = new DynamicParameters();
+            parameters.Add("id", id, DbType.Int64);
+            parameters.Add("landlord_id", restriction.Landlord_id, DbType.Int64);
+            parameters.Add("car_name", restriction.Car_name, DbType.String);
+            parameters.Add("descriptoin", restriction.Description, DbType.String);
+
+
+            using (var connection = _dapperContext.CreateConnection())
+            {
+                await connection.ExecuteAsync(query, parameters);
+            }
         }
     }
 }
