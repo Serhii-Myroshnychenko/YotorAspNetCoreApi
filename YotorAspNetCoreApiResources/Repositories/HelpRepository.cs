@@ -67,5 +67,14 @@ namespace YotorAspNetCoreApiResources.Repositories
             }
             return false;
         }
+        public async Task<Landlord> IsThisCarOfHisOrganization(string name)
+        {
+            var query = "select Landlord.landlord_id,Landlord.user_id,Landlord.organization_id,Landlord.name from Car join Landlord ON Car.organization_id =  Landlord.organization_id Where Car.model = @name";
+            using (var connection = _dapperContext.CreateConnection())
+            {
+                var landlord = await connection.QueryFirstOrDefaultAsync<Landlord>(query, new { name});
+                return landlord;
+            }
+        }
     }
 }

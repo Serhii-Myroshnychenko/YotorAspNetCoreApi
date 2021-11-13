@@ -12,5 +12,6 @@ namespace YotorAspNetCoreApiResources.Contracts
         public Task<bool> IsAdmin(int id);
         public Task<bool> IsUser(int id);
         public Task<bool> IsOrganization(int id);
+        public Task<Landlord> IsThisCarOfHisOrganization(string name);
     }
 }
