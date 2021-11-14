@@ -81,7 +81,25 @@ namespace YotorAspNetCoreApiResources.Controllers
         {
             try
             {
-                return Ok();
+                var restriction = await _helpRepository.GetRestrictionByCarName(bookingConstructor.Car_name);
+                var car = await _helpRepository.GetCarByCarName(bookingConstructor.Car_name);
+                if (car != null && restriction!=null)
+                {
+                    await _bookingRepository.CreateBooking(restriction.Restriction_id, UserId, car.Car_id, null, bookingConstructor.Start_date, bookingConstructor.End_date, false, bookingConstructor.Full_price, bookingConstructor.Start_address, bookingConstructor.End_address);
+                    return Ok("Ok");
+                }
+                else if (car != null && restriction == null)
+                {
+                    await _bookingRepository.CreateBooking(null, UserId, car.Car_id, null, bookingConstructor.Start_date, bookingConstructor.End_date, false, bookingConstructor.Full_price, bookingConstructor.Start_address, bookingConstructor.End_address);
+                    return Ok("Ok");
+                }
+                else
+                {
+
+                    return BadRequest("Что-то пошло нет так");
+                }
+
+                
             }
             catch(Exception ex)
             {

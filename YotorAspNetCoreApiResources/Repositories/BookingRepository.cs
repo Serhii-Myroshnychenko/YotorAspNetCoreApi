@@ -20,7 +20,7 @@ namespace YotorAspNetCoreApiResources.Repositories
 
         public async Task CreateBooking(int? restriction_id, int user_id, int car_id, int? feedback_id, DateTime start_date, DateTime end_date, bool status, int full_price, string start_address, string end_address)
         {
-            var query = "INSERT INTO Organization (restriction_id,user_id,car_id,feedback_id,start_date,end_date,status,full_price, start_address, end_address) values (@restriction_id,@user_id,@car_id,@feedback_id,@start_date,@end_date,@status,@full_price,@start_address, @end_address);";
+            var query = "INSERT INTO Booking (restriction_id,user_id,car_id,feedback_id,start_date,end_date,status,full_price, start_address, end_address) values (@restriction_id,@user_id,@car_id,@feedback_id,@start_date,@end_date,@status,@full_price,@start_address, @end_address);";
             var parameters = new DynamicParameters();
             parameters.Add("restriction_id", restriction_id, DbType.Int64);
             parameters.Add("user_id", user_id, DbType.Int64);
