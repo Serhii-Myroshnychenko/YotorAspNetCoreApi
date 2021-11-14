@@ -76,5 +76,25 @@ namespace YotorAspNetCoreApiResources.Repositories
                 return landlord;
             }
         }
+
+        public async Task<Restriction> GetRestrictionByCarName(string name)
+        {
+            var query = "Select * from Restriction Where car_name = @name";
+            using(var connection = _dapperContext.CreateConnection())
+            {
+                var restriction = await connection.QueryFirstOrDefaultAsync<Restriction>(query, new { name });
+                return restriction;
+            }
+        }
+
+        public async Task<Car> GetCarByCarName(string name)
+        {
+            var query = "Select * from Car Where model = @name";
+            using (var connection = _dapperContext.CreateConnection())
+            {
+                var car = await connection.QueryFirstOrDefaultAsync<Car>(query, new { name });
+                return car;
+            }
+        }
     }
 }

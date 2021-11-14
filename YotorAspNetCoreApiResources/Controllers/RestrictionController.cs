@@ -78,7 +78,7 @@ namespace YotorAspNetCoreApiResources.Controllers
             {
                 var landlord = await _helpRepository.IsLandlord(UserId);
                 var isHisOrgan = await _helpRepository.IsThisCarOfHisOrganization(restrictionConstructor.Name);
-                if(landlord != null && landlord.Organization_id == isHisOrgan.Organization_id)
+                if(landlord != null && isHisOrgan != null && landlord.Organization_id == isHisOrgan.Organization_id)
                 {
                     await _restrictionRepository.CreateRestriction(landlord.Landlord_id,restrictionConstructor.Name,restrictionConstructor.Description);
                     return Ok("Ok");

@@ -10,7 +10,6 @@ namespace YotorAspNetCoreApiResources.Contracts
     {
         public Task<IEnumerable<Booking>> GetBookings();
         public Task<Booking> GetBooking(int id);
-        public Task EditBooking();
-        public Task CreateBooking();
+        public Task CreateBooking(int? restriction_id, int user_id, int car_id, int? feedback_id, DateTime start_date, DateTime end_date, bool status, int full_price, string start_address, string end_address);
     }
 }

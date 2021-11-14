@@ -13,5 +13,8 @@ namespace YotorAspNetCoreApiResources.Contracts
         public Task<bool> IsUser(int id);
         public Task<bool> IsOrganization(int id);
         public Task<Landlord> IsThisCarOfHisOrganization(string name);
+        public Task<Restriction> GetRestrictionByCarName(string name);
+        public Task<Car> GetCarByCarName(string name);
+
     }
 }
