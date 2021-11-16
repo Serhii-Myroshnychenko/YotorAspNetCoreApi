@@ -83,14 +83,58 @@ namespace YotorAspNetCoreApiResources.Controllers
             {
                 var restriction = await _helpRepository.GetRestrictionByCarName(bookingConstructor.Car_name);
                 var car = await _helpRepository.GetCarByCarName(bookingConstructor.Car_name);
+                double coefficient;
+                int countOfDays = bookingConstructor.End_date.Day - bookingConstructor.Start_date.Day;
+                if(countOfDays <= 0)
+                {
+                    countOfDays = 1;
+                }
+
+                switch (countOfDays)
+                {
+                    case 1:
+                        coefficient = 2;
+                        break;
+                    case 2:
+                        coefficient = 1.95;
+                        break;
+                    case 3:
+                        coefficient = 1.9;
+                        break;
+                    case 4:
+                        coefficient = 1.85;
+                        break;
+                    case 5:
+                        coefficient = 1.8;
+                        break;
+                    case 6:
+                        coefficient = 1.75;
+                        break;
+                    case 7:
+                        coefficient = 1.7;
+                        break;
+                    case 8:
+                        coefficient = 1.65;
+                        break;
+                    case 9:
+                        coefficient = 1.6;
+                        break;
+                    default:
+                        coefficient = 1.5;
+                        break;
+                }
+                int totalPrice = (int)(bookingConstructor.Full_price *countOfDays* coefficient);
+
                 if (car != null && restriction!=null)
                 {
-                    await _bookingRepository.CreateBooking(restriction.Restriction_id, UserId, car.Car_id, null, bookingConstructor.Start_date, bookingConstructor.End_date, false, bookingConstructor.Full_price, bookingConstructor.Start_address, bookingConstructor.End_address);
+                    await _bookingRepository.CreateBooking(restriction.Restriction_id, UserId, car.Car_id, null, bookingConstructor.Start_date, bookingConstructor.End_date, false, totalPrice, bookingConstructor.Start_address, bookingConstructor.End_address);
+                    await _helpRepository.UpdateStatusCar(car.Car_id);
                     return Ok("Ok");
                 }
                 else if (car != null && restriction == null)
                 {
-                    await _bookingRepository.CreateBooking(null, UserId, car.Car_id, null, bookingConstructor.Start_date, bookingConstructor.End_date, false, bookingConstructor.Full_price, bookingConstructor.Start_address, bookingConstructor.End_address);
+                    await _bookingRepository.CreateBooking(null, UserId, car.Car_id, null, bookingConstructor.Start_date, bookingConstructor.End_date, false, totalPrice, bookingConstructor.Start_address, bookingConstructor.End_address);
+                    await _helpRepository.UpdateStatusCar(car.Car_id);
                     return Ok("Ok");
                 }
                 else

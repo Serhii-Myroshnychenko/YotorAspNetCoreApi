@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using YotorAspNetCoreApi.Models;
@@ -89,11 +90,24 @@ namespace YotorAspNetCoreApiResources.Repositories
 
         public async Task<Car> GetCarByCarName(string name)
         {
-            var query = "Select * from Car Where model = @name";
+            bool stat = true;
+            var query = "Select * from Car Where model = @name and status = @stat";
             using (var connection = _dapperContext.CreateConnection())
             {
-                var car = await connection.QueryFirstOrDefaultAsync<Car>(query, new { name });
+                var car = await connection.QueryFirstOrDefaultAsync<Car>(query, new { name,stat });
                 return car;
+            }
+        }
+        public async Task UpdateStatusCar(int id)
+        {
+            var query = "UPDATE Car SET status = @status WHERE car_id = @id";
+            var parameters = new DynamicParameters();
+            parameters.Add("id", id, DbType.Int32);
+            parameters.Add("status", false, DbType.Boolean);
+
+            using (var connection = _dapperContext.CreateConnection())
+            {
+                await connection.ExecuteAsync(query, parameters);
             }
         }
     }
