@@ -11,7 +11,7 @@ namespace YotorAspNetCoreApiResources.Contracts
         public Task<IEnumerable<Landlord>> GetLandlords();
         public Task<Landlord> GetLandlord(int id);
         public Task UpdateLandlord(int id, Landlord landlord);
-        public Task CreateLandlord(Landlord landlord);
+        public Task CreateLandlord(int user_id, int organization_id, string name);
 
 
     }

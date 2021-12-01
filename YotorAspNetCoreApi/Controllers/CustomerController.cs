@@ -81,11 +81,11 @@ namespace YotorAspNetCoreApi.Controllers
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new List<Claim>()
             {
-                new Claim("user_id", customer.user_id.ToString()),
-                new Claim(ClaimTypes.Name, customer.full_name),
-                new Claim(ClaimTypes.Email, customer.email),
-                new Claim(ClaimTypes.MobilePhone, customer.phone),
-                new Claim("is_admin", customer.is_admin.ToString())
+                new Claim("user_id", customer.User_id.ToString()),
+                new Claim(ClaimTypes.Name, customer.Full_name),
+                new Claim(ClaimTypes.Email, customer.Email),
+                new Claim(ClaimTypes.MobilePhone, customer.Phone),
+                new Claim("is_admin", customer.Is_admin.ToString())
 
             };
             var token = new JwtSecurityToken(authParams.Issuer,

@@ -113,7 +113,7 @@ namespace YotorAspNetCoreApiResources.Controllers
                     case 7:
                         coefficient = 1.7;
                         break;
-                    case 8:
+                    case 8:                        
                         coefficient = 1.65;
                         break;
                     case 9:

@@ -73,27 +73,39 @@ namespace YotorAspNetCoreApiResources.Controllers
         
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> CreateLandlord(Landlord landlord)
+        public async Task<IActionResult> CreateLandlord([FromForm] LandlordConstructor landlordConstructor)
         {
             try
             {
                 bool isAdmin = await _helpRepository.IsAdmin(UserId);
                 if (isAdmin == true)
                 {
-                    var isUserMemberOfTheOrganization = await _helpRepository.IsLandlord(landlord.User_id); 
-                    bool isUser = await _helpRepository.IsUser(landlord.User_id);
-                    bool isOrganization = await _helpRepository.IsOrganization(landlord.Organization_id);
 
-                    if(isUser == true && isOrganization == true && isUserMemberOfTheOrganization == null)
+                    var organizByName = await _helpRepository.GetOrganizationByName(landlordConstructor.OrganizationName);
+                    var customerByName = await _helpRepository.GetCustomerByName(landlordConstructor.CustomerName);
+                    if (organizByName != null && customerByName != null)
                     {
-                        await _landlordRepository.CreateLandlord(landlord);
-                        return Ok("Ok");
+                        var isUserMemberOfTheOrganization = await _helpRepository.IsLandlord(customerByName.user_id);
+                        bool isUser = await _helpRepository.IsUser(customerByName.user_id);
+                        bool isOrganization = await _helpRepository.IsOrganization(organizByName.Organization_id);
+
+                        if (isUser == true && isOrganization == true && isUserMemberOfTheOrganization == null)
+                        {
+                            await _landlordRepository.CreateLandlord(customerByName.user_id,organizByName.Organization_id,customerByName.full_name);
+                            return Ok("Ok");
+                        }
+                        else
+                        {
+                            return NotFound("Данные не являются корректными");
+                        }
                     }
                     else
                     {
-                        return NotFound("Данные не являются корректными");
+                        return BadRequest("Что-то пошло не так");
                     }
+
                     
+
                 }
                 else
                 {

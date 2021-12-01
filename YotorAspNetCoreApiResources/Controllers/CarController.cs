@@ -67,7 +67,7 @@ namespace YotorAspNetCoreApiResources.Controllers
         }
         [HttpPost("Create")]
         [Authorize]
-        public async Task<IActionResult> CreateCar([FromForm] CarConstructor carConstructor)    //[FromBody]CarConstructor carConstructor)
+        public async Task<IActionResult> CreateCar([FromForm] CarConstructor carConstructor)
         {
             try
             {

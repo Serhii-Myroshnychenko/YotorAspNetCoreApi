@@ -18,13 +18,13 @@ namespace YotorAspNetCoreApiResources.Repositories
             _dapperContext = dapperContext;
         }
 
-        public async Task CreateLandlord(Landlord landlord)
+        public async Task CreateLandlord(int user_id, int organization_id, string name)
         {
             var query = "INSERT INTO Landlord (user_id, organization_id, name) values (@user_id, @organization_id, @name);";
             var parameters = new DynamicParameters();
-            parameters.Add("user_id", landlord.User_id, DbType.Int64);
-            parameters.Add("organization_id", landlord.Organization_id, DbType.Int64);
-            parameters.Add("name", landlord.Name, DbType.String);
+            parameters.Add("user_id", user_id, DbType.Int64);
+            parameters.Add("organization_id", organization_id, DbType.Int64);
+            parameters.Add("name", name, DbType.String);
 
 
 

@@ -25,7 +25,7 @@ namespace YotorAspNetCoreApi.Repositories
             using (var connection = _dapperContext.CreateConnection())
             {
                 var customer = connection.QuerySingleOrDefault<Customer>(query, new { email });
-                bool isValid = BCrypt.Net.BCrypt.Verify(password, customer.password);
+                bool isValid = BCrypt.Net.BCrypt.Verify(password, customer.Password);
                 if (isValid)
                 {
                     return customer;

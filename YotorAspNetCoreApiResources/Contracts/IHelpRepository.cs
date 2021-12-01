@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using YotorAspNetCoreApi.Models;
 using YotorAspNetCoreApiResources.Models;
 
 namespace YotorAspNetCoreApiResources.Contracts
@@ -16,6 +17,8 @@ namespace YotorAspNetCoreApiResources.Contracts
         public Task<Restriction> GetRestrictionByCarName(string name);
         public Task<Car> GetCarByCarName(string name);
         public Task UpdateStatusCar(int id);
+        public Task<Customer> GetCustomerByName(string name);
+        public Task<Organization> GetOrganizationByName(string name);
 
     }
 }

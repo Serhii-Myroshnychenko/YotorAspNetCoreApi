@@ -38,7 +38,7 @@ namespace YotorAspNetCoreApiResources.Repositories
             var query = "Delete from Feedback where feedback_id = @id";
             using (var connection = _dapperContext.CreateConnection())
             {
-                await connection.QuerySingleOrDefaultAsync<Feedback>(query, new { id });
+                await connection.ExecuteAsync(query, new { id });
             }
         }
 
@@ -61,5 +61,6 @@ namespace YotorAspNetCoreApiResources.Repositories
                 return feedbacks.ToList();
             }
         }
+        
     }
 }

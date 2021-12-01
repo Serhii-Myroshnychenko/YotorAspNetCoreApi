@@ -110,5 +110,27 @@ namespace YotorAspNetCoreApiResources.Repositories
                 await connection.ExecuteAsync(query, parameters);
             }
         }
+        
+        public async Task<Customer> GetCustomerByName(string name)
+        {
+            var query = "select * from Customer where full_name = @name";
+            using (var connection = _dapperContext.CreateConnection())
+            {
+                var customer = await connection.QueryFirstOrDefaultAsync<Customer>(query, new { name });
+                return customer;
+            }
+        }
+        public async Task<Organization> GetOrganizationByName(string name)
+        {
+            var query = "select * from Organization where name = @name";
+            using (var connection = _dapperContext.CreateConnection())
+            {
+                var organization = await connection.QueryFirstOrDefaultAsync<Organization>(query, new { name });
+                return organization;
+            }
+        }
+
+
+       
     }
 }
