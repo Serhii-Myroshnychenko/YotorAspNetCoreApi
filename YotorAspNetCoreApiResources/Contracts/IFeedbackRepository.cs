@@ -8,9 +8,9 @@ namespace YotorAspNetCoreApiResources.Contracts
 {
     public interface IFeedbackRepository
     {
-        public Task<IEnumerable<Feedback>> GetFeedbacks();
-        public Task<Feedback> GetFeedback(int id);
-        public Task CreateFeedback(int user_id, string name, DateTime date, string text);
-        public Task DeleteFeedback(int id);
+        public Task<IEnumerable<Feedback>> GetFeedbacksAsync();
+        public Task<Feedback> GetFeedbackAsync(int id);
+        public Task CreateFeedbackAsync(int user_id, string name, DateTime date, string text);
+        public Task DeleteFeedbackAsync(int id);
     }
 }

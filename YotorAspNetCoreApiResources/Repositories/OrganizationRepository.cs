@@ -17,7 +17,7 @@ namespace YotorAspNetCoreApiResources.Repositories
         {
             _dapperContext = dapperContext;
         }
-        public async Task CreateOrganization(Organization organization)
+        public async Task CreateOrganizationAsync(Organization organization)
         {
             var query = "INSERT INTO Organization (name,email,phone,code,taxes,address,founder,account) values (@name,@email,@phone,@code,@taxes,@address,@founder,@account);";
             var parameters = new DynamicParameters();
@@ -37,7 +37,7 @@ namespace YotorAspNetCoreApiResources.Repositories
             }
         }
 
-        public async Task EditOrganization(int id, Organization organization)
+        public async Task EditOrganizationAsync(int id, Organization organization)
         {
             var query = "UPDATE Organization SET name = @name, email = @email, phone = @phone, code = @code,taxes = @taxes,address = @address,founder = @founder,account = @account WHERE organization_id = @id";
             var parameters = new DynamicParameters();
@@ -58,7 +58,7 @@ namespace YotorAspNetCoreApiResources.Repositories
             }
         }
 
-        public async Task<Organization> GetOrganization(int id)
+        public async Task<Organization> GetOrganizationAsync(int id)
         {
             var query = "SELECT * FROM Organization Where organization_id = @id";
             using (var connection = _dapperContext.CreateConnection())
@@ -68,7 +68,7 @@ namespace YotorAspNetCoreApiResources.Repositories
             }
         }
 
-        public async Task<IEnumerable<Organization>> GetOrganizations()
+        public async Task<IEnumerable<Organization>> GetOrganizationsAsync()
         {
             var query = "SELECT * FROM Organization";
             using (var connection = _dapperContext.CreateConnection())

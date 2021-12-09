@@ -8,10 +8,10 @@ namespace YotorAspNetCoreApiResources.Contracts
 {
     public interface IRestrictionRepository
     {
-        public Task<IEnumerable<Restriction>> GetRestrictions();
-        public Task<Restriction> GetRestriction(int id);
-        public Task CreateRestriction( int landlord_id, string car_name, string description);
-        public Task UpdateRestriction(int id, Restriction restriction);
-        public Task DeleteRestriction(int id);
+        public Task<IEnumerable<Restriction>> GetRestrictionsAsync();
+        public Task<Restriction> GetRestrictionAsync(int id);
+        public Task CreateRestrictionAsync( int landlord_id, string car_name, string description);
+        public Task UpdateRestrictionAsync(int id, Restriction restriction);
+        public Task DeleteRestrictionAsync(int id);
     }
 }

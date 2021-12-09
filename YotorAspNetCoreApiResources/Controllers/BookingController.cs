@@ -25,14 +25,14 @@ namespace YotorAspNetCoreApiResources.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetBookings()
+        public async Task<IActionResult> GetBookingsAsync()
         {
             try
             {
-                bool isAdmin = await _helpRepository.IsAdmin(UserId);
+                bool isAdmin = await _helpRepository.IsAdminAsync(UserId);
                 if (isAdmin == true)
                 {
-                    var bookings = await _bookingRepository.GetBookings();
+                    var bookings = await _bookingRepository.GetBookingsAsync();
                     return Ok(bookings);
                 }
                 else
@@ -47,14 +47,14 @@ namespace YotorAspNetCoreApiResources.Controllers
         }
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<IActionResult> GetBooking(int id)
+        public async Task<IActionResult> GetBookingAsync(int id)
         {
             try
             {
-                bool isAdmin = await _helpRepository.IsAdmin(UserId);
+                bool isAdmin = await _helpRepository.IsAdminAsync(UserId);
                 if(isAdmin == true)
                 {
-                    var booking = await _bookingRepository.GetBooking(id);
+                    var booking = await _bookingRepository.GetBookingAsync(id);
                     if(booking != null)
                     {
                         return Ok(booking);
@@ -77,12 +77,12 @@ namespace YotorAspNetCoreApiResources.Controllers
         }
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> CreateBooking([FromForm]BookingConstructor bookingConstructor)
+        public async Task<IActionResult> CreateBookingAsync([FromForm]BookingConstructor bookingConstructor)
         {
             try
             {
-                var restriction = await _helpRepository.GetRestrictionByCarName(bookingConstructor.Car_name);
-                var car = await _helpRepository.GetCarByCarName(bookingConstructor.Car_name);
+                var restriction = await _helpRepository.GetRestrictionByCarNameAsync(bookingConstructor.Car_name);
+                var car = await _helpRepository.GetCarByCarNameAsync(bookingConstructor.Car_name);
                 double coefficient;
                 int countOfDays = bookingConstructor.End_date.Day - bookingConstructor.Start_date.Day;
                 if(countOfDays <= 0)
@@ -127,14 +127,14 @@ namespace YotorAspNetCoreApiResources.Controllers
 
                 if (car != null && restriction!=null)
                 {
-                    await _bookingRepository.CreateBooking(restriction.Restriction_id, UserId, car.Car_id, null, bookingConstructor.Start_date, bookingConstructor.End_date, false, totalPrice, bookingConstructor.Start_address, bookingConstructor.End_address);
-                    await _helpRepository.UpdateStatusCar(car.Car_id);
+                    await _bookingRepository.CreateBookingAsync(restriction.Restriction_id, UserId, car.Car_id, null, bookingConstructor.Start_date, bookingConstructor.End_date, false, totalPrice, bookingConstructor.Start_address, bookingConstructor.End_address);
+                    await _helpRepository.UpdateStatusCarAsync(car.Car_id);
                     return Ok("Ok");
                 }
                 else if (car != null && restriction == null)
                 {
-                    await _bookingRepository.CreateBooking(null, UserId, car.Car_id, null, bookingConstructor.Start_date, bookingConstructor.End_date, false, totalPrice, bookingConstructor.Start_address, bookingConstructor.End_address);
-                    await _helpRepository.UpdateStatusCar(car.Car_id);
+                    await _bookingRepository.CreateBookingAsync(null, UserId, car.Car_id, null, bookingConstructor.Start_date, bookingConstructor.End_date, false, totalPrice, bookingConstructor.Start_address, bookingConstructor.End_address);
+                    await _helpRepository.UpdateStatusCarAsync(car.Car_id);
                     return Ok("Ok");
                 }
                 else

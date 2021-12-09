@@ -18,7 +18,7 @@ namespace YotorAspNetCoreApiResources.Repositories
         {
             _dapperContext = dapperContext;
         }
-        public async Task CreateCar(int organization_id, string model, string brand, string year, string transmission, string address, bool status, string type, int price, byte[] photo, string description, string number)
+        public async Task CreateCarAsync(int organization_id, string model, string brand, string year, string transmission, string address, bool status, string type, int price, byte[] photo, string description, string number)
         {
             var query = "INSERT INTO Car (organization_id,model,brand,year,transmission,address,status,type,price,photo,description,number) VALUES (@organization_id,@model,@brand,@year,@transmission,@address,@status,@type,@price,@photo,@description,@number)";
             var parameters = new DynamicParameters();
@@ -41,7 +41,7 @@ namespace YotorAspNetCoreApiResources.Repositories
             }
         }
 
-        public async Task<Car> GetCar(int id)
+        public async Task<Car> GetCarAsync(int id)
         {
             var query = "SELECT * FROM Car WHERE car_id = @id";
             using (var connection = _dapperContext.CreateConnection())
@@ -52,7 +52,7 @@ namespace YotorAspNetCoreApiResources.Repositories
             }
         }
 
-        public async Task<IEnumerable<Car>> GetCars()
+        public async Task<IEnumerable<Car>> GetCarsAsync()
         {
             var query = "Select * from Car";
             using (var connection = _dapperContext.CreateConnection())
@@ -61,7 +61,7 @@ namespace YotorAspNetCoreApiResources.Repositories
                 return cars.ToList();
             }
         }
-        public async Task UpdateCar(int id, string model, string brand, string year, string transmission, string address, bool status, string type, int price, byte[] photo, string description, string number)
+        public async Task UpdateCarAsync(int id, string model, string brand, string year, string transmission, string address, bool status, string type, int price, byte[] photo, string description, string number)
         {
             var query = "UPDATE Car SET model = @model, brand = @brand, year = @year, transmission = @transmission, address = @address,status = @status,type = @type,price = @price,photo = @photo,description = @description,number = @number WHERE car_id = @id";
             var parameters = new DynamicParameters();
@@ -80,6 +80,15 @@ namespace YotorAspNetCoreApiResources.Repositories
             using (var connection = _dapperContext.CreateConnection())
             {
                 await connection.ExecuteAsync(query, parameters);
+            }
+        }
+        public async Task<IEnumerable<Car>> GetMostPopularCarsAsync()
+        {
+            var query = "select Car.car_id from Car left join Booking on Car.car_id = Booking.car_id group by Car.car_id having count(Booking.booking_id) >= 0 order by COUNT(Booking.booking_id) desc";
+            using (var connection = _dapperContext.CreateConnection())
+            {
+                var cars = await connection.QueryAsync<Car>(query);
+                return cars.ToList();
             }
         }
     }

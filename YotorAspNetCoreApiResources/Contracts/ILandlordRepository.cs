@@ -8,10 +8,10 @@ namespace YotorAspNetCoreApiResources.Contracts
 {
     public interface ILandlordRepository
     {
-        public Task<IEnumerable<Landlord>> GetLandlords();
-        public Task<Landlord> GetLandlord(int id);
-        public Task UpdateLandlord(int id, Landlord landlord);
-        public Task CreateLandlord(int user_id, int organization_id, string name);
+        public Task<IEnumerable<Landlord>> GetLandlordsAsync();
+        public Task<Landlord> GetLandlordAsync(int id);
+        public Task UpdateLandlordAsync(int id, Landlord landlord);
+        public Task CreateLandlordAsync(int user_id, int organization_id, string name);
 
 
     }

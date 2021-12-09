@@ -9,9 +9,10 @@ namespace YotorAspNetCoreApiResources.Contracts
 {
     public interface ICarRepository
     {
-        public Task<IEnumerable<Car>> GetCars();
-        public Task<Car> GetCar(int id);
-        public Task CreateCar(int organization_id,string model, string brand, string year, string transmission, string address, bool status, string type, int price, byte[] phote, string description, string number );
-        public Task UpdateCar(int id,string model, string brand, string year, string transmission, string address, bool status, string type, int price, byte[] phote, string description, string number);
+        public Task<IEnumerable<Car>> GetCarsAsync();
+        public Task<Car> GetCarAsync(int id);
+        public Task CreateCarAsync(int organization_id,string model, string brand, string year, string transmission, string address, bool status, string type, int price, byte[] phote, string description, string number );
+        public Task UpdateCarAsync(int id,string model, string brand, string year, string transmission, string address, bool status, string type, int price, byte[] phote, string description, string number);
+        public Task<IEnumerable<Car>> GetMostPopularCarsAsync();
     }
 }

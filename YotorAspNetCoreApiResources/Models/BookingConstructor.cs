@@ -8,18 +8,18 @@ namespace YotorAspNetCoreApiResources.Models
 {
     public class BookingConstructor
     {
-        [Required]
+        [Required(ErrorMessage = "Введите начальную дату")]
         public DateTime Start_date { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Введите кончную дату")]
         public DateTime End_date { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Введите начальный адресс")]
 
         public string Start_address { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Введите конечный адресс")]
         public string End_address { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Введите название машини")]
         public string Car_name { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Введите цену")]
         public int Full_price { get; set; }
 
     }

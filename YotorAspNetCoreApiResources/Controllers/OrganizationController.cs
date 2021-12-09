@@ -27,14 +27,14 @@ namespace YotorAspNetCoreApiResources.Controllers
 
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<IActionResult> GetOrganization(int id)
+        public async Task<IActionResult> GetOrganizationAsync(int id)
         {
             try
             {
-                var admin = await _helpRepository.IsAdmin(UserId);
+                var admin = await _helpRepository.IsAdminAsync(UserId);
                 if (admin == true)
                 {
-                    var organizations = await _organizationRepository.GetOrganization(id);
+                    var organizations = await _organizationRepository.GetOrganizationAsync(id);
                     return Ok(organizations);
                 }
                 else
@@ -53,14 +53,14 @@ namespace YotorAspNetCoreApiResources.Controllers
         }
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetOrganizations()
+        public async Task<IActionResult> GetOrganizationsAsync()
         {
             try
             {
-                var admin = await _helpRepository.IsAdmin(UserId);
+                var admin = await _helpRepository.IsAdminAsync(UserId);
                 if (admin == true)
                 {
-                    var organizations = await _organizationRepository.GetOrganizations();
+                    var organizations = await _organizationRepository.GetOrganizationsAsync();
                     return Ok(organizations);
                 }
                 else
@@ -78,14 +78,14 @@ namespace YotorAspNetCoreApiResources.Controllers
 
         }
         [HttpPost]
-        public async Task<IActionResult> CreateOrganization(Organization organization)
+        public async Task<IActionResult> CreateOrganizationAsync(Organization organization)
         {
             try
             {
-                var admin = await _helpRepository.IsAdmin(UserId);
+                var admin = await _helpRepository.IsAdminAsync(UserId);
                 if (admin == true)
                 {
-                    await _organizationRepository.CreateOrganization(organization);
+                    await _organizationRepository.CreateOrganizationAsync(organization);
                     return Ok("Ok");
                 }
                 else
@@ -99,14 +99,14 @@ namespace YotorAspNetCoreApiResources.Controllers
             }
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateOrganization(int id, Organization organization)
+        public async Task<IActionResult> UpdateOrganizationAsync(int id, Organization organization)
         {
             try
             {
-                var admin = await _helpRepository.IsAdmin(UserId);
+                var admin = await _helpRepository.IsAdminAsync(UserId);
                 if(admin == true)
                 {
-                    await _organizationRepository.EditOrganization(id,organization);
+                    await _organizationRepository.EditOrganizationAsync(id,organization);
                     return Ok("Ok");
                 }
                 else

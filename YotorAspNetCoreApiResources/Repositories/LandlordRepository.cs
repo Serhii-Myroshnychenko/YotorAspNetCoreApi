@@ -18,7 +18,7 @@ namespace YotorAspNetCoreApiResources.Repositories
             _dapperContext = dapperContext;
         }
 
-        public async Task CreateLandlord(int user_id, int organization_id, string name)
+        public async Task CreateLandlordAsync(int user_id, int organization_id, string name)
         {
             var query = "INSERT INTO Landlord (user_id, organization_id, name) values (@user_id, @organization_id, @name);";
             var parameters = new DynamicParameters();
@@ -34,7 +34,7 @@ namespace YotorAspNetCoreApiResources.Repositories
             }
         }
 
-        public async Task<Landlord> GetLandlord(int id)
+        public async Task<Landlord> GetLandlordAsync(int id)
         {
             var query = "Select * from Landlord where landlord_id = @id";
             using (var connection = _dapperContext.CreateConnection())
@@ -44,7 +44,7 @@ namespace YotorAspNetCoreApiResources.Repositories
             }
         }
 
-        public async Task<IEnumerable<Landlord>> GetLandlords()
+        public async Task<IEnumerable<Landlord>> GetLandlordsAsync()
         {
             var query = "Select * from Landlord";
             using(var connection = _dapperContext.CreateConnection())
@@ -54,7 +54,7 @@ namespace YotorAspNetCoreApiResources.Repositories
             }
         }
 
-        public async Task UpdateLandlord(int id, Landlord landlord)
+        public async Task UpdateLandlordAsync(int id, Landlord landlord)
         {
             var query = "UPDATE Landlord SET user_id = @user_id, organization_id = @organization_id, name = @name WHERE landlord_id = @id";
             var parameters = new DynamicParameters();

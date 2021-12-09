@@ -8,9 +8,9 @@ namespace YotorAspNetCoreApiResources.Models
 {
     public class RestrictionConstructor
     {
-        [Required]
+        [Required(ErrorMessage = "Введите название машини")]
         public string Name { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Введите описание машини")]
         public string Description { get; set; }
     }
 }

@@ -18,10 +18,10 @@ namespace YotorAspNetCoreApi.Repositories
             _dapperContext = dapperContext;
         }
 
-        public Customer GetCustomer(string email, string password)
+        public Customer GetCustomerAsync(string email, string password)
         {
             var query = "Select * from Customer where email = @email";
-            //var hash = BCrypt.Net.BCrypt.HashPassword(password);
+            
             using (var connection = _dapperContext.CreateConnection())
             {
                 var customer = connection.QuerySingleOrDefault<Customer>(query, new { email });
@@ -34,7 +34,7 @@ namespace YotorAspNetCoreApi.Repositories
             }
         }
 
-        public async Task<IEnumerable<Customer>> GetCustomers()
+        public async Task<IEnumerable<Customer>> GetCustomersAsync()
         {
             var query = "Select * From Customer";
             using (var connection = _dapperContext.CreateConnection())

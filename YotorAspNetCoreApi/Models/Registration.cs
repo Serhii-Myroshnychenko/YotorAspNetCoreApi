@@ -8,14 +8,14 @@ namespace YotorAspNetCoreApi.Models
 {
     public class Registration
     {
-        [Required]
+        [Required(ErrorMessage = "Введите ФИО")]
         public string Full_name { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Введите почту")]
         [EmailAddress]
         public string Email { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Введите телефон")]
         public string Phone { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Введите пароль")]
         public string Password { get; set; }
 
     }

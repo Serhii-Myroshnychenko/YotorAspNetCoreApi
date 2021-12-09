@@ -18,7 +18,7 @@ namespace YotorAspNetCoreApiResources.Repositories
             _dappperContext = dapperContext;
         }
 
-        public async Task CreateBooking(int? restriction_id, int user_id, int car_id, int? feedback_id, DateTime start_date, DateTime end_date, bool status, int full_price, string start_address, string end_address)
+        public async Task CreateBookingAsync(int? restriction_id, int user_id, int car_id, int? feedback_id, DateTime start_date, DateTime end_date, bool status, int full_price, string start_address, string end_address)
         {
             var query = "INSERT INTO Booking (restriction_id,user_id,car_id,feedback_id,start_date,end_date,status,full_price, start_address, end_address) values (@restriction_id,@user_id,@car_id,@feedback_id,@start_date,@end_date,@status,@full_price,@start_address, @end_address);";
             var parameters = new DynamicParameters();
@@ -42,12 +42,12 @@ namespace YotorAspNetCoreApiResources.Repositories
             }
         }
 
-        public Task EditBooking()
+        public Task EditBookingAsync()
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Booking> GetBooking(int id)
+        public async Task<Booking> GetBookingAsync(int id)
         {
             var query = "SELECT * FROM Booking WHERE booking_id = @id";
             using (var connection = _dappperContext.CreateConnection())
@@ -58,7 +58,7 @@ namespace YotorAspNetCoreApiResources.Repositories
             }
         }
 
-        public async Task<IEnumerable<Booking>> GetBookings()
+        public async Task<IEnumerable<Booking>> GetBookingsAsync()
         {
             var query = "SELECT * FROM Booking";
             using (var connection = _dappperContext.CreateConnection())

@@ -8,10 +8,10 @@ namespace YotorAspNetCoreApi.Models
 {
     public class Login
     {
-        [Required]
+        [Required(ErrorMessage = "Введите почту")]
         [EmailAddress]
         public string Email { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Введите пароль")]
         public string Password { get; set; }
     }
 }

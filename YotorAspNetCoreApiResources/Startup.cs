@@ -72,6 +72,7 @@ namespace YotorAspNetCoreApiResources
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IRestrictionRepository, RestrictionRepository>();
             services.AddScoped<IHelpRepository, HelpRepository>();
+            services.AddScoped<IDatabaseRepository, DatabaseRepository>();
 
             services.AddSwaggerGen(c =>
             {

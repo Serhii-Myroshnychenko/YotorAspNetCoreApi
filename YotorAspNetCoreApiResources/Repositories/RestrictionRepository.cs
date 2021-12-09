@@ -17,7 +17,7 @@ namespace YotorAspNetCoreApiResources.Repositories
         {
             _dapperContext = dapperContext;
         }
-        public async Task CreateRestriction(int landlord_id, string car_name, string description)
+        public async Task CreateRestrictionAsync(int landlord_id, string car_name, string description)
         {
             var query = "INSERT INTO Restriction (landlord_id, car_name, description) values (@landlord_id, @car_name, @description);";
             var parameters = new DynamicParameters();
@@ -31,7 +31,7 @@ namespace YotorAspNetCoreApiResources.Repositories
             }
         }
 
-        public async Task DeleteRestriction(int id)
+        public async Task DeleteRestrictionAsync(int id)
         {
             var query = "Delete from Restriction where restriction_id = @id";
             using (var connection = _dapperContext.CreateConnection())
@@ -40,7 +40,7 @@ namespace YotorAspNetCoreApiResources.Repositories
             }
         }
 
-        public async Task<Restriction> GetRestriction(int id)
+        public async Task<Restriction> GetRestrictionAsync(int id)
         {
             var query = "SELECT * FROM Restriction Where restriction_id = @id";
             using (var connection = _dapperContext.CreateConnection())
@@ -50,7 +50,7 @@ namespace YotorAspNetCoreApiResources.Repositories
             }
         }
 
-        public async Task<IEnumerable<Restriction>> GetRestrictions()
+        public async Task<IEnumerable<Restriction>> GetRestrictionsAsync()
         {
             var query = "SELECT * FROM Restriction";
             using (var connection = _dapperContext.CreateConnection())
@@ -60,7 +60,7 @@ namespace YotorAspNetCoreApiResources.Repositories
             }
         }
 
-        public async Task UpdateRestriction(int id, Restriction restriction)
+        public async Task UpdateRestrictionAsync(int id, Restriction restriction)
         {
             var query = "UPDATE Restriction SET landlord_id = @landlord_id, car_name = @car_name, description = @description WHERE restriction_id = @id";
             var parameters = new DynamicParameters();

@@ -30,7 +30,7 @@ namespace YotorAspNetCoreApi.Controllers
         {
             try
             {
-                var customers = await _customerRepository.GetCustomers();
+                var customers = await _customerRepository.GetCustomersAsync();
                 return Ok(customers);
             }
             catch (Exception ex)
@@ -57,7 +57,7 @@ namespace YotorAspNetCoreApi.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] Login login)
         {
-            var user = _customerRepository.GetCustomer(login.Email, login.Password);
+            var user = _customerRepository.GetCustomerAsync(login.Email, login.Password);
 
             if (user != null)
             {

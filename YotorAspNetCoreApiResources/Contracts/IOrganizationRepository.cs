@@ -8,9 +8,9 @@ namespace YotorAspNetCoreApiResources.Contracts
 {
     public interface IOrganizationRepository
     {
-        public Task<IEnumerable<Organization>> GetOrganizations();
-        public Task<Organization> GetOrganization(int id);
-        public Task EditOrganization(int id, Organization organization);
-        public Task CreateOrganization(Organization organization);
+        public Task<IEnumerable<Organization>> GetOrganizationsAsync();
+        public Task<Organization> GetOrganizationAsync(int id);
+        public Task EditOrganizationAsync(int id, Organization organization);
+        public Task CreateOrganizationAsync(Organization organization);
     }
 }

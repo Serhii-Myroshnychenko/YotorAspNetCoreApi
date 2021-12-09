@@ -27,14 +27,14 @@ namespace YotorAspNetCoreApiResources.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetRestrictions()
+        public async Task<IActionResult> GetRestrictionsAsync()
         {
             try
             {
-                bool isAdmin = await _helpRepository.IsAdmin(UserId);
+                bool isAdmin = await _helpRepository.IsAdminAsync(UserId);
                 if(isAdmin == true)
                 {
-                    var restrictions = await _restrictionRepository.GetRestrictions();
+                    var restrictions = await _restrictionRepository.GetRestrictionsAsync();
                     return Ok(restrictions);
                 }
                 else
@@ -49,14 +49,14 @@ namespace YotorAspNetCoreApiResources.Controllers
         }
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<IActionResult> GetRestriction(int id)
+        public async Task<IActionResult> GetRestrictionAsync(int id)
         {
             try
             {
-                bool isAdmin = await _helpRepository.IsAdmin(UserId);
+                bool isAdmin = await _helpRepository.IsAdminAsync(UserId);
                 if(isAdmin == true)
                 {
-                    var restriction = await _restrictionRepository.GetRestriction(id);
+                    var restriction = await _restrictionRepository.GetRestrictionAsync(id);
                     return Ok(restriction);
                 }
                 else
@@ -72,15 +72,15 @@ namespace YotorAspNetCoreApiResources.Controllers
         }
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> CreateRestriction([FromForm]RestrictionConstructor restrictionConstructor)
+        public async Task<IActionResult> CreateRestrictionAsync([FromForm]RestrictionConstructor restrictionConstructor)
         {
             try
             {
-                var landlord = await _helpRepository.IsLandlord(UserId);
-                var isHisOrgan = await _helpRepository.IsThisCarOfHisOrganization(restrictionConstructor.Name);
+                var landlord = await _helpRepository.IsLandlordAsync(UserId);
+                var isHisOrgan = await _helpRepository.IsThisCarOfHisOrganizationAsync(restrictionConstructor.Name);
                 if(landlord != null && isHisOrgan != null && landlord.Organization_id == isHisOrgan.Organization_id)
                 {
-                    await _restrictionRepository.CreateRestriction(landlord.Landlord_id,restrictionConstructor.Name,restrictionConstructor.Description);
+                    await _restrictionRepository.CreateRestrictionAsync(landlord.Landlord_id,restrictionConstructor.Name,restrictionConstructor.Description);
                     return Ok("Ok");
                 }
                 else
@@ -96,14 +96,14 @@ namespace YotorAspNetCoreApiResources.Controllers
         }
         [HttpDelete("{id}")]
         [Authorize]
-        public async Task<IActionResult> DeleteRestiction(int id)
+        public async Task<IActionResult> DeleteRestictionAsync(int id)
         {
             try
             {
-                var landlord = await _helpRepository.IsLandlord(UserId);
+                var landlord = await _helpRepository.IsLandlordAsync(UserId);
                 if(landlord != null)
                 {
-                    await _restrictionRepository.DeleteRestriction(id);
+                    await _restrictionRepository.DeleteRestrictionAsync(id);
                     return Ok("Ok");
                 }
                 else

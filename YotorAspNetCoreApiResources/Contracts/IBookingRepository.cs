@@ -8,8 +8,11 @@ namespace YotorAspNetCoreApiResources.Contracts
 {
     public interface IBookingRepository
     {
-        public Task<IEnumerable<Booking>> GetBookings();
-        public Task<Booking> GetBooking(int id);
-        public Task CreateBooking(int? restriction_id, int user_id, int car_id, int? feedback_id, DateTime start_date, DateTime end_date, bool status, int full_price, string start_address, string end_address);
+        public Task<IEnumerable<Booking>> GetBookingsAsync();
+        public Task<Booking> GetBookingAsync(int id);
+        public Task CreateBookingAsync(int? restriction_id, int user_id, int car_id, int? feedback_id, DateTime start_date, DateTime end_date, bool status, int full_price, string start_address, string end_address);
+
+        
+
     }
 }

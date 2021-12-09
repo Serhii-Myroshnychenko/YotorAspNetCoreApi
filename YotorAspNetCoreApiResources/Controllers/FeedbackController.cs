@@ -26,14 +26,14 @@ namespace YotorAspNetCoreApiResources.Controllers
         [HttpGet]
         [Authorize]
 
-        public async Task<IActionResult> GetFeedbacks()
+        public async Task<IActionResult> GetFeedbacksAsync()
         {
             try
             {
-                bool isAdmin = await _helpRepository.IsAdmin(UserId);
+                bool isAdmin = await _helpRepository.IsAdminAsync(UserId);
                 if(isAdmin == true)
                 {
-                    var feedbacks = await _feedbackRepository.GetFeedbacks();
+                    var feedbacks = await _feedbackRepository.GetFeedbacksAsync();
                     return Ok(feedbacks);
                 }
                 else
@@ -49,14 +49,14 @@ namespace YotorAspNetCoreApiResources.Controllers
        
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<IActionResult> GetFeedback(int id)
+        public async Task<IActionResult> GetFeedbackAsync(int id)
         {
             try
             {
-                bool isAdmin = await _helpRepository.IsAdmin(UserId);
+                bool isAdmin = await _helpRepository.IsAdminAsync(UserId);
                 if (isAdmin == true)
                 {
-                    var feedback = await _feedbackRepository.GetFeedback(id);
+                    var feedback = await _feedbackRepository.GetFeedbackAsync(id);
                     return Ok(feedback);
                 }
                 else
@@ -72,12 +72,12 @@ namespace YotorAspNetCoreApiResources.Controllers
         
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> CreateFeedback([FromForm]FeedbackConstructor feedbackConstructor)
+        public async Task<IActionResult> CreateFeedbackAsync([FromForm]FeedbackConstructor feedbackConstructor)
         {
             try
             {
                 DateTime time = DateTime.Today;
-                await _feedbackRepository.CreateFeedback(UserId,feedbackConstructor.Name,time,feedbackConstructor.Text);
+                await _feedbackRepository.CreateFeedbackAsync(UserId,feedbackConstructor.Name,time,feedbackConstructor.Text);
                 return Ok("OK");
             }
             catch(Exception ex)
@@ -86,14 +86,14 @@ namespace YotorAspNetCoreApiResources.Controllers
             }
         }
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteFeedback(int id)
+        public async Task<IActionResult> DeleteFeedbackAsync(int id)
         {
             try
             {
-                bool isAdmin = await _helpRepository.IsAdmin(UserId);
+                bool isAdmin = await _helpRepository.IsAdminAsync(UserId);
                 if(isAdmin == true)
                 {
-                    await _feedbackRepository.DeleteFeedback(id);
+                    await _feedbackRepository.DeleteFeedbackAsync(id);
                     return Ok("Ok");
                 }
                 else
