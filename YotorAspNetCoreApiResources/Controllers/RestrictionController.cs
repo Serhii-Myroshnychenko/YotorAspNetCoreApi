@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using YotorAspNetCoreApiResources.Contracts;
@@ -16,94 +14,87 @@ namespace YotorAspNetCoreApiResources.Controllers
     {
         private readonly IRestrictionRepository _restrictionRepository;
         private readonly IHelpRepository _helpRepository;
-
         private int UserId => int.Parse(User.Claims.Single(c => c.Type == "user_id").Value);
-
         public RestrictionController(IRestrictionRepository restrictionRepository, IHelpRepository helpRepository)
         {
             _restrictionRepository = restrictionRepository;
             _helpRepository = helpRepository;
         }
-
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetRestrictions()
+        public async Task<IActionResult> GetRestrictionsAsync()
         {
             try
             {
-                bool isAdmin = await _helpRepository.IsAdmin(UserId);
-                if(isAdmin == true)
+                bool isAdmin = await _helpRepository.IsAdminAsync(UserId);
+                if (isAdmin == true)
                 {
-                    var restrictions = await _restrictionRepository.GetRestrictions();
-                    return Ok(restrictions);
+                    return Ok(await _restrictionRepository.GetRestrictionsAsync());
                 }
                 else
                 {
                     return BadRequest("Вы не являетесь администратором");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
         }
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<IActionResult> GetRestriction(int id)
+        public async Task<IActionResult> GetRestrictionAsync(int id)
         {
             try
             {
-                bool isAdmin = await _helpRepository.IsAdmin(UserId);
-                if(isAdmin == true)
+                bool isAdmin = await _helpRepository.IsAdminAsync(UserId);
+                if (isAdmin == true)
                 {
-                    var restriction = await _restrictionRepository.GetRestriction(id);
-                    return Ok(restriction);
+                    return Ok(await _restrictionRepository.GetRestrictionAsync(id));
                 }
                 else
                 {
                     return BadRequest("Вы не являетесь администратором");
                 }
-
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
         }
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> CreateRestriction([FromForm]RestrictionConstructor restrictionConstructor)
+        public async Task<IActionResult> CreateRestrictionAsync([FromForm] RestrictionConstructor restrictionConstructor)
         {
             try
             {
-                var landlord = await _helpRepository.IsLandlord(UserId);
-                var isHisOrgan = await _helpRepository.IsThisCarOfHisOrganization(restrictionConstructor.Name);
-                if(landlord != null && landlord.Organization_id == isHisOrgan.Organization_id)
+                var landlord = await _helpRepository.IsLandlordAsync(UserId);
+                var isHisOrgan = await _helpRepository.IsThisCarOfHisOrganizationAsync(restrictionConstructor.Name);
+                if (landlord != null && isHisOrgan != null && landlord.Organization_id == isHisOrgan.Organization_id)
                 {
-                    await _restrictionRepository.CreateRestriction(landlord.Landlord_id,restrictionConstructor.Name,restrictionConstructor.Description);
+                    await _restrictionRepository.CreateRestrictionAsync(landlord.Landlord_id, restrictionConstructor.Name, restrictionConstructor.Description);
                     return Ok("Ok");
                 }
                 else
                 {
                     return BadRequest("У вас нету доступа к данному автомобилю");
                 }
-
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
         }
         [HttpDelete("{id}")]
         [Authorize]
-        public async Task<IActionResult> DeleteRestiction(int id)
+        public async Task<IActionResult> DeleteRestictionAsync(int id)
         {
             try
             {
-                var landlord = await _helpRepository.IsLandlord(UserId);
-                if(landlord != null)
+                var landlord = await _helpRepository.IsLandlordAsync(UserId);
+                if (landlord != null)
                 {
-                    await _restrictionRepository.DeleteRestriction(id);
+                    await _restrictionRepository.DeleteRestrictionAsync(id);
                     return Ok("Ok");
                 }
                 else
@@ -111,7 +102,7 @@ namespace YotorAspNetCoreApiResources.Controllers
                     return BadRequest("Вы не являетесь арендодателем");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }

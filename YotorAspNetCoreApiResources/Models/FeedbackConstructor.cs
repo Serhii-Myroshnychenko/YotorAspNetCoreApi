@@ -8,9 +8,10 @@ namespace YotorAspNetCoreApiResources.Models
 {
     public class FeedbackConstructor
     {
-        [Required]
+        
+        [Required(ErrorMessage = "Введите имя")]
         public string Name { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Введите отзыв")]
         public string Text { get; set; }
     }
 }

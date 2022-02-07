@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using YotorAspNetCoreApiResources.Contracts;
@@ -22,23 +20,20 @@ namespace YotorAspNetCoreApiResources.Controllers
             _feedbackRepository = feedbackRepository;
             _helpRepository = helpRepository;
         }
-        
         [HttpGet]
         [Authorize]
-
-        public async Task<IActionResult> GetFeedbacks()
+        public async Task<IActionResult> GetFeedbacksAsync()
         {
             try
             {
-                bool isAdmin = await _helpRepository.IsAdmin(UserId);
+                bool isAdmin = await _helpRepository.IsAdminAsync(UserId);
                 if(isAdmin == true)
                 {
-                    var feedbacks = await _feedbackRepository.GetFeedbacks();
-                    return Ok(feedbacks);
+                    return Ok(await _feedbackRepository.GetFeedbacksAsync());
                 }
                 else
                 {
-                    return BadRequest("Вы не являетесь администратором");
+                    return BadRequest("Что-то пошло не так");
                 }
             }
             catch(Exception ex)
@@ -49,15 +44,14 @@ namespace YotorAspNetCoreApiResources.Controllers
        
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<IActionResult> GetFeedback(int id)
+        public async Task<IActionResult> GetFeedbackAsync(int id)
         {
             try
             {
-                bool isAdmin = await _helpRepository.IsAdmin(UserId);
+                bool isAdmin = await _helpRepository.IsAdminAsync(UserId);
                 if (isAdmin == true)
                 {
-                    var feedback = await _feedbackRepository.GetFeedback(id);
-                    return Ok(feedback);
+                    return Ok(await _feedbackRepository.GetFeedbackAsync(id));
                 }
                 else
                 {
@@ -69,15 +63,14 @@ namespace YotorAspNetCoreApiResources.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> CreateFeedback([FromForm]FeedbackConstructor feedbackConstructor)
+        public async Task<IActionResult> CreateFeedbackAsync([FromBody]FeedbackConstructor feedbackConstructor)
         {
             try
             {
                 DateTime time = DateTime.Today;
-                await _feedbackRepository.CreateFeedback(UserId,feedbackConstructor.Name,time,feedbackConstructor.Text);
+                await _feedbackRepository.CreateFeedbackAsync(UserId,feedbackConstructor.Name,time,feedbackConstructor.Text);
                 return Ok("OK");
             }
             catch(Exception ex)
@@ -86,14 +79,14 @@ namespace YotorAspNetCoreApiResources.Controllers
             }
         }
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteFeedback(int id)
+        public async Task<IActionResult> DeleteFeedbackAsync(int id)
         {
             try
             {
-                bool isAdmin = await _helpRepository.IsAdmin(UserId);
+                bool isAdmin = await _helpRepository.IsAdminAsync(UserId);
                 if(isAdmin == true)
                 {
-                    await _feedbackRepository.DeleteFeedback(id);
+                    await _feedbackRepository.DeleteFeedbackAsync(id);
                     return Ok("Ok");
                 }
                 else
@@ -106,6 +99,5 @@ namespace YotorAspNetCoreApiResources.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-
     }
 }

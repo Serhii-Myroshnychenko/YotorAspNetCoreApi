@@ -1,96 +1,72 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using YotorAspNetCoreApiResources.Contracts;
-using YotorAspNetCoreApiResources.Models;
+using YotorContext.Models;
 
 namespace YotorAspNetCoreApiResources.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
+    
     public class OrganizationController : ControllerBase
     {
         private readonly IOrganizationRepository _organizationRepository;
         private readonly IHelpRepository _helpRepository;
-
         private int UserId => int.Parse(User.Claims.Single(c => c.Type == "user_id").Value);
-
         public OrganizationController(IOrganizationRepository organizationRepository, IHelpRepository helpRepository)
         {
             _organizationRepository = organizationRepository;
-            _helpRepository = helpRepository;
+            _helpRepository = helpRepository;   
         }
-
         [HttpGet("{id}")]
-        [Authorize]
-        public async Task<IActionResult> GetOrganization(int id)
+        public async Task<IActionResult> GetOrganizationAsync(int id)
         {
             try
             {
-                var admin = await _helpRepository.IsAdmin(UserId);
+                var admin = await _helpRepository.IsAdminAsync(UserId);
                 if (admin == true)
                 {
-                    var organizations = await _organizationRepository.GetOrganization(id);
-                    return Ok(organizations);
+                    return Ok(await _organizationRepository.GetOrganizationAsync(id));
                 }
                 else
                 {
                     return Unauthorized("Вы не являетесь администратором");
                 }
-
-                
             }
             catch (Exception ex)
             {
-              
                 return StatusCode(500, ex.Message);
             }
-
         }
-        [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> GetOrganizations()
+        [HttpGet("Get")]
+        public async Task<IActionResult> GetOrganizationsAsync()
         {
             try
             {
-                var admin = await _helpRepository.IsAdmin(UserId);
-                if (admin == true)
-                {
-                    var organizations = await _organizationRepository.GetOrganizations();
-                    return Ok(organizations);
-                }
-                else
-                {
-                    return Unauthorized("Вы не являетесь администратором");
-                }
-
-                
+                return Ok(await _organizationRepository.GetOrganizationsAsync());
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
-                //log error
                 return StatusCode(500, ex.Message);
             }
-
         }
         [HttpPost]
-        public async Task<IActionResult> CreateOrganization(Organization organization)
+        public async Task<IActionResult> CreateOrganizationAsync(Organization organization)
         {
             try
             {
-                var admin = await _helpRepository.IsAdmin(UserId);
+                var admin = await _helpRepository.IsAdminAsync(UserId);
                 if (admin == true)
                 {
-                    await _organizationRepository.CreateOrganization(organization);
+                    await _organizationRepository.CreateOrganizationAsync(organization);
                     return Ok("Ok");
                 }
                 else
                 {
-                    return Unauthorized("Вы не являетесь администратором");
+                   return Unauthorized("Вы не являетесь администратором");
                 }
             }
             catch(Exception ex)
@@ -99,14 +75,14 @@ namespace YotorAspNetCoreApiResources.Controllers
             }
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateOrganization(int id, Organization organization)
+        public async Task<IActionResult> UpdateOrganizationAsync(int id, Organization organization)
         {
             try
             {
-                var admin = await _helpRepository.IsAdmin(UserId);
-                if(admin == true)
+                var admin = await _helpRepository.IsAdminAsync(UserId);
+                if (admin == true)
                 {
-                    await _organizationRepository.EditOrganization(id,organization);
+                    await _organizationRepository.EditOrganizationAsync(id, organization);
                     return Ok("Ok");
                 }
                 else
@@ -119,7 +95,19 @@ namespace YotorAspNetCoreApiResources.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-
-
+       
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteOrganizationAsync(int id)
+        {
+            try
+            {
+                await _organizationRepository.DeleteOrganizationAsync(id);
+                return Ok("Ok");    
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
