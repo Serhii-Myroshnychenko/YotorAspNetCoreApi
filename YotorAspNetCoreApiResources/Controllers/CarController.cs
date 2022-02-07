@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using YotorAspNetCoreApiResources.Contracts;
@@ -17,28 +14,18 @@ namespace YotorAspNetCoreApiResources.Controllers
     {
         private readonly ICarRepository _carRepository;
         private readonly IHelpRepository _helpRepository;
-
-
         private int UserId => int.Parse(User.Claims.Single(c => c.Type == "user_id").Value);
         public CarController(ICarRepository carRepository, IHelpRepository helpRepository)
         {
             _carRepository = carRepository;
             _helpRepository = helpRepository;
         }
-        
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetCarsAsync()
         {
             try
             {
-                bool isAdmin = await _helpRepository.IsAdminAsync(UserId);
-                if(isAdmin == true)
-                {
-                    var cars = await _carRepository.GetCarsAsync();
-                    return Ok(cars);
-                }
-                return NotFound("Недостаточно прав");
+                return Ok(await _carRepository.GetCarsAsync());
             }
             catch (Exception ex)
             {
@@ -74,14 +61,8 @@ namespace YotorAspNetCoreApiResources.Controllers
                 var isLandlord = await _helpRepository.IsLandlordAsync(UserId);
                 if (isLandlord != null)
                 {
-                    byte[] imageData = null;
-                    using(var binaryReader = new BinaryReader(carConstructor.Photo.OpenReadStream()))
-                    {
-                        imageData = binaryReader.ReadBytes((int)carConstructor.Photo.Length);
-                    }
-                    await _carRepository.CreateCarAsync(isLandlord.Organization_id, carConstructor.Model, carConstructor.Brand, carConstructor.Year, carConstructor.Transmission, carConstructor.Address, true, carConstructor.Type, carConstructor.Price, imageData, carConstructor.Description, carConstructor.Number);
+                    await _carRepository.CreateCarAsync(isLandlord.Organization_id, carConstructor.Model, carConstructor.Brand, carConstructor.Year, carConstructor.Transmission, carConstructor.Address, true, carConstructor.Type, carConstructor.Price, null, carConstructor.Description, carConstructor.Number);
                     return Ok("Успешно");
-
                 }
                 else
                 {
@@ -100,23 +81,13 @@ namespace YotorAspNetCoreApiResources.Controllers
         {
             try
             {
-
                 bool isAdmin = await _helpRepository.IsAdminAsync(UserId);
                 if (isAdmin == true)
                 {
-                    byte[] imageData = null;
-                    if (carConstructor.Photo != null)
-                    {
-                        using (var binaryReader = new BinaryReader(carConstructor.Photo.OpenReadStream()))
-                        {
-                            imageData = binaryReader.ReadBytes((int)carConstructor.Photo.Length);
-                        }
-                    }
-                    await _carRepository.UpdateCarAsync(id, carConstructor.Model, carConstructor.Brand, carConstructor.Year, carConstructor.Transmission, carConstructor.Address, carConstructor.Status, carConstructor.Type, carConstructor.Price, imageData, carConstructor.Description, carConstructor.Number);
+                    await _carRepository.UpdateCarAsync(id, carConstructor.Model, carConstructor.Brand, carConstructor.Year, carConstructor.Transmission, carConstructor.Address, carConstructor.Status, carConstructor.Type, carConstructor.Price, null, carConstructor.Description, carConstructor.Number);
                     return Ok("Успешно");
                 }
                 return NotFound("Недостаточно прав");
-
             }
             catch(Exception ex)
             {
@@ -128,8 +99,7 @@ namespace YotorAspNetCoreApiResources.Controllers
         {
             try
             {
-                var cars = await _carRepository.GetMostPopularCarsAsync();
-                return Ok(cars);
+                return Ok(await _carRepository.GetMostPopularCarsAsync());
             }
             catch(Exception ex)
             {

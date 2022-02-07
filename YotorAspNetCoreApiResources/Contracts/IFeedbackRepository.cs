@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using YotorAspNetCoreApiResources.Models;
+using YotorContext.Models;
 
 namespace YotorAspNetCoreApiResources.Contracts
 {
     public interface IFeedbackRepository
     {
-        public Task<IEnumerable<Feedback>> GetFeedbacksAsync();
-        public Task<Feedback> GetFeedbackAsync(int id);
-        public Task CreateFeedbackAsync(int user_id, string name, DateTime date, string text);
-        public Task DeleteFeedbackAsync(int id);
+        Task<IEnumerable<Feedback>> GetFeedbacksAsync();
+        Task<Feedback> GetFeedbackAsync(int id);
+        Task CreateFeedbackAsync(int user_id, string name, DateTime date, string text);
+        Task DeleteFeedbackAsync(int id);
     }
 }

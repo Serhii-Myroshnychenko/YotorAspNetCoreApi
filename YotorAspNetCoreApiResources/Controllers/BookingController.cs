@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using BLL.BL;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using YotorAspNetCoreApiResources.Contracts;
@@ -16,15 +14,15 @@ namespace YotorAspNetCoreApiResources.Controllers
     {
         private readonly IBookingRepository _bookingRepository;
         private readonly IHelpRepository _helpRepository;
+        private readonly BookingСoefficient _bookingСoefficient;
         private int UserId => int.Parse(User.Claims.Single(c => c.Type == "user_id").Value);
         public BookingController(IBookingRepository bookingRepository, IHelpRepository helpRepository)
         {
             _bookingRepository = bookingRepository;
             _helpRepository = helpRepository;
+            _bookingСoefficient = new BookingСoefficient();
         }
-
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetBookingsAsync()
         {
             try
@@ -32,8 +30,7 @@ namespace YotorAspNetCoreApiResources.Controllers
                 bool isAdmin = await _helpRepository.IsAdminAsync(UserId);
                 if (isAdmin == true)
                 {
-                    var bookings = await _bookingRepository.GetBookingsAsync();
-                    return Ok(bookings);
+                    return Ok(await _bookingRepository.GetBookingsAsync());
                 }
                 else
                 {
@@ -46,7 +43,6 @@ namespace YotorAspNetCoreApiResources.Controllers
             }
         }
         [HttpGet("{id}")]
-        [Authorize]
         public async Task<IActionResult> GetBookingAsync(int id)
         {
             try
@@ -63,7 +59,6 @@ namespace YotorAspNetCoreApiResources.Controllers
                     {
                         return BadRequest("Что-то пошло не так");
                     }
-
                 }
                 else
                 {
@@ -75,57 +70,30 @@ namespace YotorAspNetCoreApiResources.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpGet("User")]
+        public async Task<IActionResult> GetBookingsByUserIdAsync()
+        {
+            try
+            {
+                return Ok(await _bookingRepository.GetBookingsByUserIdAsync(UserId));
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
         [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> CreateBookingAsync([FromForm]BookingConstructor bookingConstructor)
+        public async Task<IActionResult> Booking(BookingConstructor bookingConstructor)
         {
             try
             {
                 var restriction = await _helpRepository.GetRestrictionByCarNameAsync(bookingConstructor.Car_name);
                 var car = await _helpRepository.GetCarByCarNameAsync(bookingConstructor.Car_name);
-                double coefficient;
                 int countOfDays = bookingConstructor.End_date.Day - bookingConstructor.Start_date.Day;
-                if(countOfDays <= 0)
-                {
-                    countOfDays = 1;
-                }
+                double coefficient = _bookingСoefficient.CalculateСoefficient(countOfDays);
+                int totalPrice = (int)(bookingConstructor.Full_price * countOfDays * coefficient);
 
-                switch (countOfDays)
-                {
-                    case 1:
-                        coefficient = 2;
-                        break;
-                    case 2:
-                        coefficient = 1.95;
-                        break;
-                    case 3:
-                        coefficient = 1.9;
-                        break;
-                    case 4:
-                        coefficient = 1.85;
-                        break;
-                    case 5:
-                        coefficient = 1.8;
-                        break;
-                    case 6:
-                        coefficient = 1.75;
-                        break;
-                    case 7:
-                        coefficient = 1.7;
-                        break;
-                    case 8:                        
-                        coefficient = 1.65;
-                        break;
-                    case 9:
-                        coefficient = 1.6;
-                        break;
-                    default:
-                        coefficient = 1.5;
-                        break;
-                }
-                int totalPrice = (int)(bookingConstructor.Full_price *countOfDays* coefficient);
-
-                if (car != null && restriction!=null)
+                if (car != null && restriction != null)
                 {
                     await _bookingRepository.CreateBookingAsync(restriction.Restriction_id, UserId, car.Car_id, null, bookingConstructor.Start_date, bookingConstructor.End_date, false, totalPrice, bookingConstructor.Start_address, bookingConstructor.End_address);
                     await _helpRepository.UpdateStatusCarAsync(car.Car_id);
@@ -139,11 +107,21 @@ namespace YotorAspNetCoreApiResources.Controllers
                 }
                 else
                 {
-
-                    return BadRequest("Что-то пошло нет так");
+                    return NotFound("Что-то пошло нет так");
                 }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
 
-                
+        [HttpGet("Params")]
+        public async Task<IActionResult> GetBookingByParamsAsync(DateTime start_date, DateTime end_date, string start_address, string end_address)
+        {
+            try
+            {
+                return Ok(await _bookingRepository.GetBookingByParamsAsync(start_date, end_date, start_address, end_address));
             }
             catch(Exception ex)
             {

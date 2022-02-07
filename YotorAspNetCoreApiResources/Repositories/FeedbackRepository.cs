@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Dapper;
 using System.Threading.Tasks;
-using YotorAspNetCoreApiResources.Context;
 using YotorAspNetCoreApiResources.Contracts;
-using YotorAspNetCoreApiResources.Models;
 using System.Data;
+using YotorContext.Context;
+using YotorContext.Models;
 
 namespace YotorAspNetCoreApiResources.Repositories
 {
@@ -17,7 +17,6 @@ namespace YotorAspNetCoreApiResources.Repositories
         {
             _dapperContext = dapperContext;
         }
-
         public async Task CreateFeedbackAsync(int user_id, string name, DateTime date, string text)
         {
             var query = "INSERT INTO Feedback (user_id, name, date,text) values (@user_id, @name, @date,@text);";
@@ -32,7 +31,6 @@ namespace YotorAspNetCoreApiResources.Repositories
                 await connection.ExecuteAsync(query, parameters);
             }
         }
-
         public async Task DeleteFeedbackAsync(int id)
         {
             var query = "Delete from Feedback where feedback_id = @id";
@@ -41,17 +39,14 @@ namespace YotorAspNetCoreApiResources.Repositories
                 await connection.ExecuteAsync(query, new { id });
             }
         }
-
         public async Task<Feedback> GetFeedbackAsync(int id)
         {
             var query = "Select * from Feedback where feedback_id = @id";
             using (var connection = _dapperContext.CreateConnection())
             {
-                var feedback = await connection.QuerySingleOrDefaultAsync<Feedback>(query, new { id });
-                return feedback;
+                return await connection.QuerySingleOrDefaultAsync<Feedback>(query, new { id });
             }
         }
-
         public async  Task<IEnumerable<Feedback>> GetFeedbacksAsync()
         {
             var query = "Select * from Feedback";

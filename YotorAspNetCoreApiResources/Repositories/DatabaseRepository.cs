@@ -1,12 +1,9 @@
 ﻿using Dapper;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
-using YotorAspNetCoreApiResources.Context;
 using YotorAspNetCoreApiResources.Contracts;
-using YotorAspNetCoreApiResources.Models;
+using YotorContext.Context;
+using YotorContext.Models;
 
 namespace YotorAspNetCoreApiResources.Repositories
 {
@@ -17,37 +14,29 @@ namespace YotorAspNetCoreApiResources.Repositories
         {
             _dapperContext = dapperContext;
         }
-
         public async Task CreateBackupAsync(string path)
         {
-
             var query = $"BACKUP DATABASE YotorDb TO DISK = @path";
             using (var connection = _dapperContext.CreateConnection())
             {
                 await connection.ExecuteAsync(query, new { path});
             }
         }
-
         public async Task InsertBackupToDbAsync(string path)
         {
-
             var query = "INSERT INTO [Backup] (path) values (@path);";
+            
             var parameters = new DynamicParameters();
             parameters.Add("path", path, DbType.String);
-            
 
             using (var connection = _dapperContext.CreateConnection())
             {
                 await connection.ExecuteAsync(query, parameters);
             }
         }
-
-        
-
         public async Task RestoreDatabaseBySomeBackupAsync(Backup backup)
         {
-            
-         var query = $"use YotorDb alter database YotorDb set single_user with rollback immediate use master RESTORE DATABASE YotorDb FROM DISK = @path WITH REPLACE,RECOVERY ";
+            var query = $"use YotorDb alter database YotorDb set single_user with rollback immediate use master RESTORE DATABASE YotorDb FROM DISK = @path WITH REPLACE,RECOVERY ";
             var parameters = new DynamicParameters();
             parameters.Add("path", backup.Path, DbType.String);
             using (var connection = _dapperContext.CreateConnection())
@@ -60,8 +49,7 @@ namespace YotorAspNetCoreApiResources.Repositories
             var query = "SELECT * FROM [Backup] WHERE backup_id=(SELECT max(backup_id) FROM [Backup])";
             using (var connection = _dapperContext.CreateConnection())
             {
-                var backup = await connection.QuerySingleOrDefaultAsync<Backup>(query);
-                return backup;
+                return await connection.QuerySingleOrDefaultAsync<Backup>(query);
             }
         }
         public async Task<Backup> GetBackupByIdAsync(int id)
@@ -69,8 +57,7 @@ namespace YotorAspNetCoreApiResources.Repositories
             var query = "Select * from [Backup] where backup_id = @id";
             using (var connection = _dapperContext.CreateConnection())
             {
-                var backup = await connection.QuerySingleOrDefaultAsync<Backup>(query, new { id });
-                return backup;
+                return await connection.QuerySingleOrDefaultAsync<Backup>(query, new { id });
             }
         }
     }

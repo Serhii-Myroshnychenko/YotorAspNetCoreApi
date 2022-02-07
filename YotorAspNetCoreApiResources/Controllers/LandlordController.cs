@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using YotorAspNetCoreApiResources.Contracts;
 using YotorAspNetCoreApiResources.Models;
+using YotorContext.Models;
 
 namespace YotorAspNetCoreApiResources.Controllers
 {
@@ -16,15 +15,12 @@ namespace YotorAspNetCoreApiResources.Controllers
     {
         private readonly ILandlordRepository _landlordRepository;
         private readonly IHelpRepository _helpRepository;
-
-
         private int UserId => int.Parse(User.Claims.Single(c => c.Type == "user_id").Value);
         public LandlordController(ILandlordRepository landlordRepository, IHelpRepository helpRepository)
         {
             _landlordRepository = landlordRepository;
             _helpRepository = helpRepository;
         }
-        
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> GetLandlordsAsync()
@@ -34,8 +30,7 @@ namespace YotorAspNetCoreApiResources.Controllers
                 bool isAdmin = await _helpRepository.IsAdminAsync(UserId);
                 if(isAdmin == true)
                 {
-                    var landlords = await _landlordRepository.GetLandlordsAsync();
-                    return Ok(landlords);
+                    return Ok(await _landlordRepository.GetLandlordsAsync());
                 }
                 else
                 {
@@ -47,7 +42,6 @@ namespace YotorAspNetCoreApiResources.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        
         [HttpGet("{id}")]
         [Authorize]
         public async Task<IActionResult> GetLandlordAsync(int id)
@@ -57,8 +51,7 @@ namespace YotorAspNetCoreApiResources.Controllers
                 bool isAdmin = await _helpRepository.IsAdminAsync(UserId);
                 if(isAdmin == true)
                 {
-                    var landlord = await _landlordRepository.GetLandlordAsync(id);
-                    return Ok(landlord);
+                    return Ok(await _landlordRepository.GetLandlordAsync(id));
                 }
                 else
                 {
@@ -70,7 +63,6 @@ namespace YotorAspNetCoreApiResources.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> CreateLandlordAsync([FromForm] LandlordConstructor landlordConstructor)
@@ -80,7 +72,6 @@ namespace YotorAspNetCoreApiResources.Controllers
                 bool isAdmin = await _helpRepository.IsAdminAsync(UserId);
                 if (isAdmin == true)
                 {
-
                     var organizByName = await _helpRepository.GetOrganizationByNameAsync(landlordConstructor.OrganizationName);
                     var customerByName = await _helpRepository.GetCustomerByNameAsync(landlordConstructor.CustomerName);
                     if (organizByName != null && customerByName != null)
@@ -103,9 +94,6 @@ namespace YotorAspNetCoreApiResources.Controllers
                     {
                         return BadRequest("Что-то пошло не так");
                     }
-
-                    
-
                 }
                 else
                 {
@@ -117,7 +105,6 @@ namespace YotorAspNetCoreApiResources.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-       
         [HttpPut("{id}")]
         [Authorize]
         public async Task<IActionResult> UpdateLandlordAsync(int id, Landlord landlord)
@@ -139,7 +126,6 @@ namespace YotorAspNetCoreApiResources.Controllers
                     {
                         return NotFound("Данные не являются корректными");
                     }
-
                 }
                 else
                 {

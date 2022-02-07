@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using YotorAspNetCoreApiResources.Contracts;
@@ -22,10 +20,8 @@ namespace YotorAspNetCoreApiResources.Controllers
             _feedbackRepository = feedbackRepository;
             _helpRepository = helpRepository;
         }
-        
         [HttpGet]
         [Authorize]
-
         public async Task<IActionResult> GetFeedbacksAsync()
         {
             try
@@ -33,12 +29,11 @@ namespace YotorAspNetCoreApiResources.Controllers
                 bool isAdmin = await _helpRepository.IsAdminAsync(UserId);
                 if(isAdmin == true)
                 {
-                    var feedbacks = await _feedbackRepository.GetFeedbacksAsync();
-                    return Ok(feedbacks);
+                    return Ok(await _feedbackRepository.GetFeedbacksAsync());
                 }
                 else
                 {
-                    return BadRequest("Вы не являетесь администратором");
+                    return BadRequest("Что-то пошло не так");
                 }
             }
             catch(Exception ex)
@@ -56,8 +51,7 @@ namespace YotorAspNetCoreApiResources.Controllers
                 bool isAdmin = await _helpRepository.IsAdminAsync(UserId);
                 if (isAdmin == true)
                 {
-                    var feedback = await _feedbackRepository.GetFeedbackAsync(id);
-                    return Ok(feedback);
+                    return Ok(await _feedbackRepository.GetFeedbackAsync(id));
                 }
                 else
                 {
@@ -69,10 +63,9 @@ namespace YotorAspNetCoreApiResources.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> CreateFeedbackAsync([FromForm]FeedbackConstructor feedbackConstructor)
+        public async Task<IActionResult> CreateFeedbackAsync([FromBody]FeedbackConstructor feedbackConstructor)
         {
             try
             {
@@ -106,6 +99,5 @@ namespace YotorAspNetCoreApiResources.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-
     }
 }

@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using YotorAspNetCoreApi.Context;
+
 using YotorAspNetCoreApi.Contracts;
 using YotorAspNetCoreApi.Models;
+using YotorContext.Context;
+using YotorContext.Models;
 
 namespace YotorAspNetCoreApi.Repositories
 {
@@ -18,13 +20,17 @@ namespace YotorAspNetCoreApi.Repositories
             _dapperContext = dapperContext;
         }
 
-        public Customer GetCustomerAsync(string email, string password)
+        public async Task<Customer> GetCustomerAsync(string email, string password)
         {
             var query = "Select * from Customer where email = @email";
             
             using (var connection = _dapperContext.CreateConnection())
             {
-                var customer = connection.QuerySingleOrDefault<Customer>(query, new { email });
+                var customer = await connection.QuerySingleOrDefaultAsync<Customer>(query, new { email });
+                if (customer == null)
+                {
+                    return null;
+                }
                 bool isValid = BCrypt.Net.BCrypt.Verify(password, customer.Password);
                 if (isValid)
                 {
@@ -34,6 +40,7 @@ namespace YotorAspNetCoreApi.Repositories
             }
         }
 
+   
         public async Task<IEnumerable<Customer>> GetCustomersAsync()
         {
             var query = "Select * From Customer";

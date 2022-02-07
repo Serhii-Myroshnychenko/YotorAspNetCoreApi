@@ -3,16 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using YotorAspNetCoreApiResources.Models;
+
+using YotorContext.Models;
 
 namespace YotorAspNetCoreApiResources.Contracts
 {
     public interface ICarRepository
     {
-        public Task<IEnumerable<Car>> GetCarsAsync();
-        public Task<Car> GetCarAsync(int id);
-        public Task CreateCarAsync(int organization_id,string model, string brand, string year, string transmission, string address, bool status, string type, int price, byte[] phote, string description, string number );
-        public Task UpdateCarAsync(int id,string model, string brand, string year, string transmission, string address, bool status, string type, int price, byte[] phote, string description, string number);
-        public Task<IEnumerable<Car>> GetMostPopularCarsAsync();
+        Task<IEnumerable<Car>> GetCarsAsync();
+        Task<Car> GetCarAsync(int id);
+        Task CreateCarAsync(int organization_id,string model, string brand, string year, string transmission, string address, bool status, string type, int price, string phote, string description, string number );
+        Task UpdateCarAsync(int id,string model, string brand, string year, string transmission, string address, bool status, string type, int price, string phote, string description, string number);
+        Task<IEnumerable<Car>> GetMostPopularCarsAsync();
     }
 }

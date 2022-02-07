@@ -1,16 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using YotorAspNetCoreApi.Contracts;
 using YotorAspNetCoreApi.Helpers;
 using YotorAspNetCoreApi.Models;
+using YotorContext.Models;
 
 namespace YotorAspNetCoreApi.Controllers
 {
@@ -20,32 +19,30 @@ namespace YotorAspNetCoreApi.Controllers
     {
         private readonly IOptions<AuthOptions> _options;
         private readonly ICustomerRepository _customerRepository;
+        
         public CustomerController(IOptions<AuthOptions> options, ICustomerRepository customerRepository)
         {
             _options = options;
             _customerRepository = customerRepository;
         }
         [HttpGet]
-        public async Task<IActionResult> GetCustomers()
+        public async Task<IActionResult> GetCustomersAsync()
         {
             try
             {
-                var customers = await _customerRepository.GetCustomersAsync();
-                return Ok(customers);
+                return Ok(await _customerRepository.GetCustomersAsync());
             }
             catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
         }
-        [HttpPost("Regist")]
-
-        public async Task<IActionResult> Registration([FromBody] Registration registration)
+        [HttpPost("Registration")]
+        public async Task<IActionResult> RegistrationAsync([FromBody] Registration registration)
         {
             try
             {
-                bool role = false;
-                await _customerRepository.Registration(registration.Full_name, registration.Email, registration.Phone, registration.Password, role);
+                await _customerRepository.Registration(registration.Full_name, registration.Email, registration.Phone, registration.Password, false);
                 return Ok("Ok");
             }
             catch (Exception ex)
@@ -54,21 +51,18 @@ namespace YotorAspNetCoreApi.Controllers
             }
         }
 
-        [HttpPost("login")]
-        public IActionResult Login([FromBody] Login login)
+        [HttpPost("Login")]
+        public async Task<IActionResult> LoginAsync([FromBody] Login login)
         {
-            var user = _customerRepository.GetCustomerAsync(login.Email, login.Password);
+            var user = await _customerRepository.GetCustomerAsync(login.Email, login.Password);
 
             if (user != null)
             {
-                //Generate Token 
                 var token = GenerateJWT(user);
                 return Ok(new
                 {
                     access_token = token
                 });
-
-
             }
             return NotFound("Неверный логин или пароль");
 
@@ -76,7 +70,6 @@ namespace YotorAspNetCoreApi.Controllers
         private string GenerateJWT(Customer customer)
         {
             var authParams = _options.Value;
-
             var securityKey = authParams.GetSymmetricSecurityKey();
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new List<Claim>()

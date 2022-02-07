@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using YotorAspNetCoreApiResources.Contracts;
@@ -23,23 +20,20 @@ namespace YotorAspNetCoreApiResources.Controllers
         }
 
         [HttpGet]
-        
-
         public async Task<IActionResult> CreateBackupAsync()
         {
             try
             {
                 Random rnd = new Random();
                 int value = rnd.Next(0, 100000);
-
                 string path = $"C:\\Program Files\\Microsoft SQL Server\\MSSQL14.SQLEXPRESS\\MSSQL\\Backup\\YotorDb{value}.bak";
-                //bool isAdmin = await _helpRepository.IsAdminAsync(UserId);
-                //if(isAdmin == true)
-                //{
+                bool isAdmin = await _helpRepository.IsAdminAsync(UserId);
+                if(isAdmin == true)
+                {
                     await _databaseRepository.CreateBackupAsync(path);
                     await _databaseRepository.InsertBackupToDbAsync(path);
                     return Ok("Ok");
-                //}
+                }
                 return Unauthorized("Недостаточно прав");
             }
             catch(Exception ex)
@@ -83,7 +77,5 @@ namespace YotorAspNetCoreApiResources.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-
-
     }
 }
